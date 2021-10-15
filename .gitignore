@@ -1,15 +1,15 @@
-	.DS_Store
-	.Rhistory
-	EcoliGenes
-	Feature_set_construction.Rmd
-	Feature_set_construction.html
-	HT_TSSs.html
-	HT_TTSs.html
-	HT_TUs.html
-	IGV_todo/
-	RegulonDB
-	Versions/
-	env.r
-	img/
-	old_analysis/
-	queries/
+.DS_Store
+.Rhistory
+EcoliGenes
+Feature_set_construction.Rmd
+Feature_set_construction.html
+HT_TSSs.html
+HT_TTSs.html
+HT_TUs.html
+IGV_todo/
+RegulonDB
+Versions/
+env.r
+img/
+old_analysis/
+queries/
