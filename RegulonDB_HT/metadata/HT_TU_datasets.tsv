@@ -1,0 +1,6 @@
+dataset_id	PMID	author	condition	detailed condition	genome version
+HT_TU_01	25006232	Conway			NC_000913.2
+HT_TU_02	31308523	Ju	LB-exponential	exponential	NC_000913.3
+HT_TU_03	31308523	Ju	LB-stationary	stationary	NC_000913.3
+HT_TU_04	30201986	Yan	M9	minimal medium	NC_000913.3
+HT_TU_05	30201986	Yan	Rich	rich medium	NC_000913.3

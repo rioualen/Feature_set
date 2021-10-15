@@ -1,0 +1,17 @@
+dataset_id	PMID	author	condition	detailed condition	genome version
+HT_TSS_01	25006232	Conway	unknown	-	NC_000913.2
+HT_TSS_02	31308523	Ju	exponential	exponential	NC_000913.3
+HT_TSS_03	31308523	Ju	stationary	stationary	NC_000913.3
+HT_TSS_04	19838305	Morett	phosphate-enrichment	5-tri or -monophosphate enrichment	NC_000913.2
+HT_TSS_05	19838305	Morett	data-454	from 454 Dataset	NC_000913.2
+HT_TSS_06	19838305	Morett	data-RACE	from RACE Dataset	NC_000913.2
+HT_TSS_07	24461193	Palsson	exponential	exponential phase	NC_000913.2
+HT_TSS_08	24461193	Palsson	glutamine-nitrogen	glutamine as source of nitrogen	NC_000913.2
+HT_TSS_09	24461193	Palsson	heat-shock	heat shock	NC_000913.2
+HT_TSS_10	24461193	Palsson	stationary	stationary phase	NC_000913.2
+HT_TSS_11	25266388	Storz	rich-stationary	"LB medium, OD = 2.0 (stat phase)"	NC_000913.2
+HT_TSS_12	25266388	Storz	mini-exponential	"M63 medium, OD = 0.4 (exp phase)"	NC_000913.2
+HT_TSS_13	25266388	Storz	rich-exponential	"LB medium, OD = 0.4 (exp phase)"	NC_000913.2
+HT_TSS_14	25266388	Wade	mini	"M9 + 0.2% glycerol, cells grown with shaking at 30¡C"	NC_000913.3
+HT_TSS_15	30201986	Yan	mini	M9	NC_000913.3
+HT_TSS_16	30201986	Yan	rich	Rich	NC_000913.3
