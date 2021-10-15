@@ -1,0 +1,323 @@
+---
+title: "HT transcription units"
+author: "Claire Rioualen"
+date: '`r Sys.Date()`'
+output:
+ html_document:
+   fig_caption: yes
+   highlight: zenburn
+   self_contained: yes
+   theme: cerulean
+   toc: yes
+   toc_depth: 5
+   toc_float: yes
+   number_sections: no
+   code_folding: hide
+
+
+---
+<style type="text/css">
+
+body{ /* Normal  */
+      font-size: 14px;
+  }
+</style>
+
+```{r init, include = FALSE, echo = FALSE}
+setwd("/Users/rioualen/Google Drive/Work/Ecoli_mapping_project/Feature_set")
+```
+
+
+```{r setup}
+knitr::opts_knit$set(root.dir = "~/Google Drive/Work/Ecoli_mapping_project/Feature_set")
+knitr::opts_chunk$set(echo = TRUE, include = TRUE, warning = FALSE, message = FALSE, cache = FALSE, eval = TRUE, fig.width = 12, fig.height = 9, fig.align = 'center')
+
+```
+
+```{r libs-n-functions}
+library(ggplot2)
+library(dplyr)
+library(DT)
+library(gridExtra)
+library(tidyr)
+library(UpSetR)
+
+devtools::load_all("~/Desktop/Git/EcoliGenes")
+
+concat_uniq <- function(x, sep = ","){
+  paste0(unique(na.omit(x)), collapse = sep)
+}
+
+check_dup <- function(df){
+  test_dup <- df %>%
+    mutate(coords = paste0(start, "_", stop, "_", strand)) %>%
+    group_by(coords) %>%
+    summarise(count = n(), 
+              across(where(is.character), concat_uniq, sep = "_"),
+              across(where(is.numeric), concat_uniq, sep = "_"),
+              .groups = 'drop') %>%
+    arrange(desc(count)) %>%
+    filter(count>1) 
+  test_dup
+}
+```
+
+> OJO
+Por ahora hice mis propias tablas de metadatos para generar las colecciones, y descargué los archivos fuentes en mi carpeta de trabajo. Más adelante, se debería considerar la forma de “fusionarlo” con las tablas de metadatos de curación, cuidando la congruencia de los datasets y condiciones, y la ubicación de los archivos fuentes. 
+
+# Transcription units from HT experiments
+
+## Format 
+
+Here, a **dataset** is defined by a combination of **PMID and experimental condition**. 
+
+TUs are collected from a variety of sources and processed to produce uniform datasets with the following fields:
+
+* **id:** Unique TU ID composed as follows: `TU_<author>_<PMID>_<condition>_<num>`
+* **start:** Left genomic position
+* **stop:**  Right genomic position
+* **strand:** TU strand reported by authors
+* **length:** TU length
+* **gene_number:** number of genes entirely contained in TU
+* **genes:** bnumbers of genes entirely contained in TU
+* **pseudo:** 1 if TU contains pseudo genes, else 0
+* **phantom:** 1 if TU contains phantom genes, else 0
+
+<!-- ## Complete metadata -->
+
+<!-- ```{r sources} -->
+<!-- ## Read metadata table provided by curators -->
+<!-- ht_tu_metadata_all <- read.delim("RegulonDB_HT/metadata/TUs_metadata.tsv", comment.char = "#", header = T, na.strings = c("NA", ""))  -->
+
+<!-- ## Display table -->
+<!-- DT0 <- DT::datatable(ht_tu_metadata_all, options = list(dom = '', pageLength = 20)) -->
+<!-- DT0 -->
+<!-- ```` -->
+
+## Metadata
+
+```{r sources-bis}
+## Select columns of interest
+ht_tu_metadata <- read.delim("RegulonDB_HT/metadata/HT_TU_datasets.tsv", comment.char = "#", header = T, na.strings = c("NA", ""))  %>%
+  dplyr::filter(!is.na(condition)) %>%
+  dplyr::mutate(condition = make.names(condition),
+                dataset_name = paste0(author, "_", PMID, "_", condition)) %>%
+  dplyr::select(dataset_id, PMID, author, condition, dataset_name)
+
+## Display selection
+DT1 <- DT::datatable(ht_tu_metadata, options = list(dom = '', pageLength = 20))
+DT1
+
+## Make list from table
+ht_tu_dataset_list <- setNames(split(ht_tu_metadata, seq(nrow(ht_tu_metadata))), ht_tu_metadata$dataset_id)
+```
+
+## Datasets per author {.tabset}
+
+This part is customized depending on the originally published files. Since those files are formatted each in their own way, this part semi manual and should be modified carefully.
+
+It generates one table per dataset, with the following columns: start, stop, strand, term_type.
+
+### Conway
+
+Reference article: [Conway et al., 2014](https://doi.org/10.1128/mbio.01442-14)
+
+Conditions:
+
+* **Pending curation**
+
+Notes:
+
+* Files were downloaded on 2021/10/01
+* Headers had to be altered manually to fit proper table delimitations
+* **Genome coordinates should be converted from version U00096.2 to version U00096.3 [here](https://biocyc.org/ECOLI/map-seq-coords-form?chromosome=COLI-K12) **
+
+```{r ht-tu-conway}
+## To do
+```
+
+
+### Ju 
+
+Reference article: [Ju et al., 2019](https://doi.org/10.1038/s41564-019-0500-z)
+
+Conditions:
+
+* exponential phase
+* stationary phase
+
+Notes:
+
+* Files were downloaded on 2021/09/30
+* Headers had to be altered manually to fit proper table delimitations
+* **TU file doesn't distinguish TUs by conditions?**
+
+```{r ht-tu-ju}
+Ju_all <- read.delim("HT_data_source/Ju/41564_2019_500_MOESM5_ESM.tsv", comment.char = "#", header = T, na.strings = c("NA", "")) %>%
+  dplyr::rename(start = Boundary_of_transcript_unit, 
+                stop = Boundary_of_transcript_unit.1, 
+                strand = Direction_of_transcript_unit) %>%
+  dplyr::mutate(term_type = "TTS") %>%
+  dplyr::select(-Number_of_covered_annotated_genes, -Name_of_covered_Genes, -Length) ## Those are to be generated by this script further below
+
+##---------------------------------------------------------------------------------
+Ju_31308523_LB.exponential <- Ju_all 
+# %>%
+  # dplyr::filter(!is.na(Detected_in_log_phase))
+
+Ju_31308523_LB.stationary <- Ju_all 
+# %>%
+  # dplyr::filter(!is.na(Detected_in_stationary_phase)) 
+```
+
+
+### Yan
+
+Reference article: [Yan et al., 2018](10.1038/s41467-018-05997-6)
+
+Conditions:
+
+* Rich (rich growth medium)
+* M9 (minimal growth medium)
+
+Notes:
+
+* Files were downloaded from [here](https://drive.google.com/drive/folders/156UQL5wUEPbAIKeSDtVoVml0vG4m4j8T?usp=sharing)
+
+* A few bnumbers had to be updated to new ones:
+  * Old: b0255,b0257,b1016,b1017,b1416,b1417,b1509,b1510,b2031,b2090,b2138,b2999,b3000,b3767,b3768,b4540
+  * New: b2139,b4488,b4490,b4493,b4498,b4571,b4587,b4658,b4696
+  
+* This may change artificially the number and order of genes in those TUs. For example, the TU "b1417,b1416" becomes "b4493"
+
+* Two types of TU termination are reported for each condition: detected TTS or longest read end. They're grouped in 2 files according to growth conditions
+
+* **There are a few cases of "duplicated TUs": they share the same condition, coordinates and strand, but one ends with a TTS (defined end) and one with the longest read. ** Should they be merged?
+
+
+```{r yan-tu-ht}
+##---------------------------------------------------------------------------------
+Yan_30201986_M9 <- read.table("HT_data_source/Yan/M9_RegulonDB_TU_definedEnd", stringsAsFactors = F) %>% dplyr::mutate(term_type = "TTS") %>% 
+  rbind.data.frame(read.table("HT_data_source/Yan/M9_RegulonDB_TU_longestRead", stringsAsFactors = F) %>% dplyr::mutate(term_type = "long")) %>%
+  dplyr::rename(start = V1, stop = V2, strand = V3) %>%
+  dplyr::select(start, stop, strand, term_type)
+
+##---------------------------------------------------------------------------------
+Yan_30201986_Rich <- read.table("HT_data_source/Yan/Rich_RegulonDB_TU_definedEnd", stringsAsFactors = F) %>% dplyr::mutate(term_type = "TTS") %>% 
+  rbind.data.frame(read.table("HT_data_source/Yan/Rich_RegulonDB_TU_longestRead", stringsAsFactors = F) %>% dplyr::mutate(term_type = "long")) %>%
+  dplyr::rename(start = V1, stop = V2, strand = V3) %>%
+  dplyr::select(start, stop, strand, term_type)
+
+```
+
+
+## Uniformization
+
+This part assumes that the specificities of each individual dataset were dealt with previously. What it does:
+
+* Generate unique IDs for TUs
+* Generate additional columns (TU length, TU genes, TU gene number, flag columns for pseudo genes and phantom genes)
+* Write one file per dataset
+
+Notes:
+
+* Only the genes that are entirely contained in the TUs are taken into account, regardless of what was reported by the authors in the original datasets.
+* The step that consists in getting bnumbers from genes that are contained in each TU is a little slow.
+
+```{r write-tu-files, fig.height = 12}
+tu_dir <- "RegulonDB_HT/TU"
+dir.create(tu_dir, showWarnings = F)
+
+## Process all datasets automatically
+for(ds_id in names(ht_tu_dataset_list)) {
+  ds_name <- ht_tu_dataset_list[[ds_id]]$dataset_name
+  df <- get(ds_name) %>%
+    dplyr::arrange(start) %>%
+    dplyr::mutate(id = paste0("TU_", ds_name, "_", dplyr::row_number())) %>%
+    dplyr::rowwise() %>%
+    dplyr::mutate(length = stop - start + 1,
+                  genes = EcoliGenes::what_genes(start, stop, strand)) %>%
+    tidyr::separate_rows(genes, sep = ",") %>%
+    dplyr::mutate(pseudo = EcoliGenes::is_pseudogene(genes),
+                  phantom = EcoliGenes::is_phantomgene(genes)) %>%
+    dplyr::group_by(id) %>%
+  	dplyr::summarise(across(where(is.character), concat_uniq),
+  	                 across(where(is.numeric), min),
+  	                 gene_number = ifelse(genes == "", 0, n())) %>%
+    dplyr::arrange(start) 
+
+
+  write.table(df %>% dplyr::select(id, start, stop, strand, length, term_type, gene_number, genes, pseudo, phantom),
+              file = paste0(tu_dir, "/", ds_id, ".tsv"),
+              sep = "\t", quote = F, col.names = T, row.names = F)
+  
+  assign(ds_name, df)
+  
+  ## Should be made a check/warning only once decision on duplicates is made
+  # df2 <- get(ds_name) %>%
+  #   dplyr::arrange(start) %>%
+  #   dplyr::mutate(id = paste0(ds_name, "_", dplyr::row_number()))
+  # write.table(check_dup(df2), file = paste0("RegulonDB_HT/TU/", ds_id, "_duplicated.tsv"), sep = "\t", quote = F, col.names = T, row.names = F)
+  ##---
+}
+
+```
+
+## Results
+
+### Summary of datasets
+
+**Note: since terminators from the Ju paper couldn't be distinguished, they were kept together, which is why the number is the same. (same goes for TTSs of the same source)**
+
+
+```{r stats-tu}
+ht_tu_stats <- ht_tu_metadata %>%
+  dplyr::rowwise() %>%
+  dplyr::mutate(tu_num = nrow(get(dataset_name))) %>%
+  dplyr::select(dataset_id, dataset_name, author, condition, tu_num)
+
+DT2 <- DT::datatable(ht_tu_stats, options = list(dom = '', pageLength = 20)) %>% DT::formatRound('tu_num', digits=0)
+DT2
+
+```
+
+### Distributions
+
+#### Number of TUs per dataset
+
+```{r fig-stats-tu-1}
+
+ggplot(ht_tu_stats, aes(x = dataset_name, y = tu_num, fill = author, color = condition)) +
+  geom_col(size = 2) +
+  scale_fill_manual(values = RColorBrewer::brewer.pal(length(unique(ht_tu_stats$author)), "Pastel2")) +
+  theme(axis.text.x = element_text(angle = 45, hjust=1), text = element_text(size = 14)) +
+  ylab("Number of TUs") +
+  xlab("Dataset name") +
+  labs(title = "Number of TUs per dataset", subtitle = "Coloured by authors and conditions")
+  
+```
+
+#### Number of genes per TUs
+
+```{r fig-stats-tu-2}
+tu_gene_number_plots <- list()
+for(ds_id in names(ht_tu_dataset_list)) {
+  ds_name <- ht_tu_dataset_list[[ds_id]]$dataset_name
+  author  <- ht_tu_dataset_list[[ds_id]]$author
+  condition  <- ht_tu_dataset_list[[ds_id]]$condition
+  
+  df <- get(ds_name)
+  
+  gg <- ggplot(df, aes(x = gene_number)) + 
+    geom_bar() +
+    theme(text = element_text(size = 14)) +
+    xlim(c(-0.5, 20)) +
+    ylab("Number of TUs") +
+    xlab("Number of entire genes per TU") +
+    labs(title = ds_id, subtitle = paste0("Author: ", author, ", condition: ", condition))
+  tu_gene_number_plots[[ds_id]] <- gg
+}
+do.call("grid.arrange", c(tu_gene_number_plots, nrow = length(ht_tu_dataset_list)))
+  
+```
+

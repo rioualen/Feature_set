@@ -1,0 +1,261 @@
+---
+title: "HT terminators"
+author: "Claire Rioualen"
+date: '`r Sys.Date()`'
+output:
+ html_document:
+   fig_caption: yes
+   highlight: zenburn
+   self_contained: yes
+   theme: cerulean
+   toc: yes
+   toc_depth: 5
+   toc_float: yes
+   number_sections: no
+   code_folding: hide
+
+
+---
+<style type="text/css">
+
+body{ /* Normal  */
+      font-size: 14px;
+  }
+</style>
+
+```{r init, include = FALSE, echo = FALSE}
+setwd("/Users/rioualen/Google Drive/Work/Ecoli_mapping_project/Feature_set")
+```
+
+
+```{r setup}
+knitr::opts_knit$set(root.dir = "~/Google Drive/Work/Ecoli_mapping_project/Feature_set")
+knitr::opts_chunk$set(echo = TRUE, include = TRUE, warning = FALSE, message = FALSE, cache = FALSE, eval = TRUE, fig.width = 12, fig.height = 9, fig.align = 'center')
+
+```
+
+```{r libs-n-functions}
+library(ggplot2)
+library(dplyr)
+library(DT)
+library(gridExtra)
+library(tidyr)
+library(UpSetR)
+
+devtools::load_all("~/Desktop/Git/EcoliGenes")
+
+concat_uniq <- function(x, sep = ","){
+  paste0(unique(na.omit(x)), collapse = sep)
+}
+
+check_dup <- function(df){
+  test_dup <- df %>%
+    mutate(coords = paste0(start, "_", stop, "_", strand)) %>%
+    group_by(coords) %>%
+    summarise(count = n(), 
+              across(where(is.character), concat_uniq, sep = "_"),
+              across(where(is.numeric), concat_uniq, sep = "_"),
+              .groups = 'drop') %>%
+    arrange(desc(count)) %>%
+    filter(count>1) 
+  test_dup
+}
+```
+
+> OJO
+Por ahora hice mis propias tablas de metadatos para generar las colecciones, y descargué los archivos fuentes en mi carpeta de trabajo. Más adelante, se debería considerar la forma de “fusionarlo” con las tablas de metadatos de curación, cuidando la congruencia de los datasets y condiciones, y la ubicación de los archivos fuentes. 
+
+# Transcription terminators from HT experiments
+
+## Format 
+
+Here, a **dataset** is defined by a combination of **PMID and experimental condition**. 
+
+TTSs are collected from a variety of sources and processed to produce uniform datasets with the following fields:
+
+* **id:** Unique TTS ID composed as follows: `TTS_<author>_<PMID>_<condition>_<num>` 
+* **start:** Left genomic position
+* **stop:**  Right genomic position
+* **strand:** TTS strand reported by authors
+
+<!-- ## Complete metadata -->
+
+<!-- ```{r sources} -->
+<!-- ## Read metadata table provided by curators -->
+<!-- ht_tu_metadata_all <- read.delim("RegulonDB_HT/metadata/TUs_metadata.tsv", comment.char = "#", header = T, na.strings = c("NA", ""))  -->
+
+<!-- ## Display table -->
+<!-- DT0 <- DT::datatable(ht_tu_metadata_all, options = list(dom = '', pageLength = 20)) -->
+<!-- DT0 -->
+<!-- ``` -->
+
+## Metadata
+
+```{r metadata}
+## Read metadata table
+ht_tts_metadata <- read.delim("RegulonDB_HT/metadata/HT_TTS_datasets.tsv", comment.char = "#", header = T, na.strings = c("NA", "")) %>%
+  dplyr::filter(!is.na(condition)) %>%
+  dplyr::mutate(condition = make.names(condition),
+                dataset_name = paste0(author, "_", PMID, "_", condition)) %>%
+  dplyr::select(dataset_id, PMID, author, condition, dataset_name)
+
+## Display
+DT1 <- DT::datatable(ht_tts_metadata, options = list(dom = '', pageLength = 20))
+DT1
+
+## Make list from table
+ht_tts_dataset_list <- setNames(split(ht_tts_metadata, seq(nrow(ht_tts_metadata))), ht_tts_metadata$dataset_id)
+```
+
+## Datasets per author {.tabset}
+
+This part is customized depending on the originally published files. Since those files are formatted each in their own way, this part is partly manual and should be modified carefully.
+
+It generates one table per dataset, with the following columns: start, stop, strand
+
+### Conway
+
+Reference article: [Conway et al., 2014](https://doi.org/10.1128/mbio.01442-14)
+
+Conditions:
+
+* **Pending curation**
+
+Notes:
+
+* Files were downloaded on 2021/10/01
+* Headers had to be altered manually to fit proper table delimitations
+* **Genome coordinates should be converted from version U00096.2 to version U00096.3 [here](https://biocyc.org/ECOLI/map-seq-coords-form?chromosome=COLI-K12) **
+
+```{r ht-tu-conway}
+## To do
+```
+
+
+### Ju 
+
+Reference article: [Ju et al., 2019](https://doi.org/10.1038/s41564-019-0500-z)
+
+Conditions:
+
+* exponential phase
+* stationary phase
+
+Notes:
+
+* Files were downloaded on 2021/09/30
+* Headers had to be altered manually to fit proper table delimitations and characters
+* **How to differenciate TTSs by conditions in the original file?**
+
+```{r ht-tu-ju}
+Ju_all <- read.delim("HT_data_source/Ju/41564_2019_500_MOESM4_ESM.tsv", comment.char = "#", header = T, na.strings = c("NA", "")) %>%
+  dplyr::mutate(start = TTS_position, 
+                stop = TTS_position, 
+                strand = TTS_strand) %>%
+  dplyr::select(start, stop, strand) ## columns for conditions should be included for separation of datasets
+
+
+##---------------------------------------------------------------------------------
+Ju_31308523_exponential <- Ju_all 
+# %>%
+  # dplyr::filter(!is.na(Detected_in_log_phase))
+
+Ju_31308523_stationary <- Ju_all 
+# %>%
+  # dplyr::filter(!is.na(Detected_in_stationary_phase)) 
+```
+
+### Yan
+
+Reference article: [Yan et al., 2018](10.1038/s41467-018-05997-6)
+
+Conditions:
+
+* Rich (rich growth medium)
+* M9 (minimal growth medium)
+
+Notes:
+
+* Files were downloaded from [here](https://drive.google.com/drive/folders/156UQL5wUEPbAIKeSDtVoVml0vG4m4j8T?usp=sharing)
+* Duplicate terminators are removed
+
+```{r yan-tu-ht}
+##---------------------------------------------------------------------------------
+Yan_30201986_M9 <- read.table("HT_data_source/Yan/M9_RegulonDB_TU_definedEnd", stringsAsFactors = F) %>% 
+  dplyr::mutate(start = V2, stop = V2, strand = V3) %>%
+  dplyr::select(start, stop, strand) %>%
+  dplyr::distinct()
+
+##---------------------------------------------------------------------------------
+Yan_30201986_Rich <- read.table("HT_data_source/Yan/Rich_RegulonDB_TU_definedEnd", stringsAsFactors = F)  %>% 
+  dplyr::mutate(start = V2, stop = V2, strand = V3) %>%
+  dplyr::select(start, stop, strand) %>%
+  dplyr::distinct()
+
+```
+
+## Uniformization
+
+This part assumes that the specificities of each individual dataset were dealt with previously. It generates unique IDs for terminators and writes one file per dataset.
+
+```{r write-tts-files}
+tts_dir <- "RegulonDB_HT/TTS"
+dir.create(tts_dir, showWarnings = F)
+
+## Process all datasets automatically
+for(ds_id in names(ht_tts_dataset_list)) {
+  ds_name <- ht_tts_dataset_list[[ds_id]]$dataset_name
+  df <- get(ds_name) %>%
+    dplyr::arrange(start) %>%
+    dplyr::mutate(id = paste0("TTS_", ds_name, "_", dplyr::row_number()))
+
+
+  write.table(df %>% dplyr::select(id, start, stop, strand),
+              file = paste0(tts_dir, "/", ds_id, ".tsv"),
+              sep = "\t", quote = F, col.names = T, row.names = F)
+  
+  assign(ds_name, df)
+  
+  # ## Should be made a check/warning only once decision on duplicates is made
+  # df2 <- get(ds_name) %>%
+  #   dplyr::arrange(start) %>%
+  #   dplyr::mutate(id = paste0(ds_name, "_", dplyr::row_number()))
+  # write.table(check_dup(df2), file = paste0("RegulonDB_HT/TTS/", ds_id, "_duplicated.tsv"), sep = "\t", quote = F, col.names = T, row.names = F)
+  # ##---
+}
+
+```
+
+## Results
+
+### Summary of datasets
+
+**Note: since terminators from the Ju paper couldn't be distinguished, they were kept together, which is why the number is the same. (same goes for TUs of the same source)**
+
+```{r stats-tu}
+ht_tts_stats <- ht_tts_metadata %>%
+  dplyr::rowwise() %>%
+  dplyr::mutate(tts_num = nrow(get(dataset_name))) %>%
+  dplyr::select(dataset_id, dataset_name, author, condition, tts_num)
+
+DT2 <- DT::datatable(ht_tts_stats, options = list(dom = '', pageLength = 20)) %>% DT::formatRound('tts_num', digits=0)
+DT2
+
+```
+
+### Distributions
+
+#### Number of terminators per dataset
+
+```{r fig-stats-tu-1}
+
+ggplot(ht_tts_stats, aes(x = dataset_name, y = tts_num, fill = author, color = condition)) +
+  geom_col(size = 2) +
+  scale_fill_manual(values = RColorBrewer::brewer.pal(length(unique(ht_tts_stats$author)), "Pastel2")) +
+  theme(axis.text.x = element_text(angle = 45, hjust=1), text = element_text(size = 14)) +
+  ylab("Number of terminators") +
+  xlab("Dataset name") +
+  labs(title = "Number of terminators per dataset", subtitle = "Coloured by authors and conditions")
+  
+```
+
