@@ -1,0 +1,20 @@
+HT promoters
+
+Storz datasets:
+HTRI00000227_HighThroughputDataSets.txt
+HTRI00000228_HighThroughputDataSets.txt
+HTRI00000458_HighThroughputDataSets.txt
+
+Morett datasets:
+
+HTRI00000230_HighThroughputDataSets.txt
+HTRI00000229_HighThroughputDataSets.txt
+HTRI00000225_HighThroughputDataSets.txt
+
+Downloaded on 2021/03/19 here:
+
+http://regulondb.ccg.unam.mx/highthroughputdatasetssearch?term=all
+
+Genome coordinates converted from version U00096.2 to version U00096.3 here: 
+
+https://biocyc.org/ECOLI/map-seq-coords-form?chromosome=COLI-K12
