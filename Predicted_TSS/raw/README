@@ -1,0 +1,21 @@
+Predicted promoters
+
+PromoterPredictionSigma24Set.txt
+PromoterPredictionSigma28Set.txt
+PromoterPredictionSigma32Set.txt
+PromoterPredictionSigma38Set.txt
+PromoterPredictionSigma54Set.txt
+PromoterPredictionSigma70Set.txt
+
+Downloaded on 2021/03/19 here:
+
+http://regulondb.ccg.unam.mx/menu/download/computational_predictions/files/PromoterPredictionSigma24Set.txt
+http://regulondb.ccg.unam.mx/menu/download/computational_predictions/files/PromoterPredictionSigma28Set.txt
+http://regulondb.ccg.unam.mx/menu/download/computational_predictions/files/PromoterPredictionSigma32Set.txt
+http://regulondb.ccg.unam.mx/menu/download/computational_predictions/files/PromoterPredictionSigma38Set.txt
+http://regulondb.ccg.unam.mx/menu/download/computational_predictions/files/PromoterPredictionSigma54Set.txt
+http://regulondb.ccg.unam.mx/menu/download/computational_predictions/files/PromoterPredictionSigma70Set.txt
+
+Genome coordinates converted from version U00096.2 to version U00096.3 here: 
+
+https://biocyc.org/ECOLI/map-seq-coords-form?chromosome=COLI-K12
