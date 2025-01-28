@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Claire Rioualen" />
+
+<meta name="date" content="2022-11-24" />
+
+<title>HT collections of genomic features: TUs, TSSs, TTSs</title>
+
+<script src="HT_collections_report_files/header-attrs-2.14/header-attrs.js"></script>
+<script src="HT_collections_report_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="HT_collections_report_files/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="HT_collections_report_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="HT_collections_report_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="HT_collections_report_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="HT_collections_report_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="HT_collections_report_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="HT_collections_report_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="HT_collections_report_files/navigation-1.1/tabsets.js"></script>
+<script src="HT_collections_report_files/navigation-1.1/codefolding.js"></script>
+<script src="HT_collections_report_files/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<link href="HT_collections_report_files/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="HT_collections_report_files/datatables-binding-0.23/datatables.js"></script>
+<link href="HT_collections_report_files/dt-core-1.11.3/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="HT_collections_report_files/dt-core-1.11.3/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="HT_collections_report_files/dt-core-1.11.3/js/jquery.dataTables.min.js"></script>
+<link href="HT_collections_report_files/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+<script src="HT_collections_report_files/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  { color: #cccccc; background-color: #303030; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ffcfaf; } /* Alert */
+code span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code span.at { } /* Attribute */
+code span.bn { color: #dca3a3; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #f0dfaf; } /* ControlFlow */
+code span.ch { color: #dca3a3; } /* Char */
+code span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code span.co { color: #7f9f7f; } /* Comment */
+code span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code span.do { color: #7f9f7f; } /* Documentation */
+code span.dt { color: #dfdfbf; } /* DataType */
+code span.dv { color: #dcdccc; } /* DecVal */
+code span.er { color: #c3bf9f; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #c0bed1; } /* Float */
+code span.fu { color: #efef8f; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+code span.kw { color: #f0dfaf; } /* Keyword */
+code span.op { color: #f0efd0; } /* Operator */
+code span.ot { color: #efef8f; } /* Other */
+code span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code span.sc { color: #dca3a3; } /* SpecialChar */
+code span.ss { color: #cc9393; } /* SpecialString */
+code span.st { color: #cc9393; } /* String */
+code span.va { } /* Variable */
+code span.vs { color: #cc9393; } /* VerbatimString */
+code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">HT collections of genomic features: TUs,
+TSSs, TTSs</h1>
+<h4 class="author">Claire Rioualen</h4>
+<h4 class="date">2022-11-24</h4>
+
+</div>
+
+
+<style type="text/css">
+body{ 
+  /* Normal  */ 
+  font-size: 14px; 
+}
+</style>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">&quot;/Users/rioualen/Google Drive/Work/2021-09_RegulonDB-HT_paper/Features&quot;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>ht_collection_dir <span class="ot">&lt;-</span> <span class="st">&quot;ht-collections-v1.0&quot;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="at">file =</span> <span class="fu">paste0</span>(<span class="st">&quot;HT_collections.Rdata&quot;</span>))</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">echo =</span> <span class="cn">TRUE</span>, <span class="at">include =</span> <span class="cn">TRUE</span>, <span class="at">warning =</span> <span class="cn">FALSE</span>, <span class="at">message =</span> <span class="cn">FALSE</span>, <span class="at">cache =</span> <span class="cn">TRUE</span>, <span class="at">eval =</span> <span class="cn">FALSE</span>, <span class="at">results =</span> <span class="st">&#39;asis&#39;</span>, <span class="at">fig.width=</span><span class="dv">12</span>, <span class="at">fig.height=</span><span class="dv">6</span>, <span class="at">fig.align =</span> <span class="st">&#39;center&#39;</span>, <span class="at">root.dir =</span> <span class="st">&quot;/Users/rioualen/Google Drive/Work/2021-09_RegulonDB-HT_paper/Features&quot;</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">load_all</span>(<span class="st">&quot;../../_Git/EcoliGenes&quot;</span>)</span></code></pre></div>
+<pre><code>## ℹ Loading EcoliGenes</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#------------------</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DT)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#------------------</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="do">## Local installation</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># devtools::load_all(&quot;../EcoliGenes&quot;)</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>concat_uniq <span class="ot">&lt;-</span> <span class="cf">function</span>(x, <span class="at">sep =</span> <span class="st">&quot;,&quot;</span>){</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste0</span>(<span class="fu">unique</span>(<span class="fu">na.omit</span>(x)), <span class="at">collapse =</span> sep)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="do">## wrapper function to remove commented rows from excel sheets</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>read_excel_cm <span class="ot">&lt;-</span> <span class="cf">function</span>(file, sheet, <span class="at">comment.char =</span> <span class="st">&quot;#&quot;</span>){</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  tab <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file, sheet, <span class="at">col_names =</span> F)</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  skip_rows <span class="ot">&lt;-</span> <span class="fu">grep</span>(<span class="fu">paste0</span>(<span class="st">&quot;^&quot;</span>, comment.char), <span class="fu">unlist</span>(<span class="fu">c</span>(tab[,<span class="dv">1</span>])))</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">length</span>(skip_rows) <span class="sc">&gt;</span> <span class="dv">0</span>) tab <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file, sheet, <span class="at">skip =</span> <span class="fu">max</span>(skip_rows))</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(tab)</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div id="regulondb-ht-collections" class="section level1">
+<h1>RegulonDB-HT collections</h1>
+<blockquote>
+<p><em>In this work, we offer facilitated access to HT collections. Each
+collection comprises all of the curated datasets generated using a given
+technology, and resulting in a specific type of object. A dataset is
+conceived as a set of data and its metadata. Metadata gathers the
+properties that enable the identification of an experiment, such as
+growth conditions (culture medium, medium supplements, aeration,
+temperature, pH, agitation, growth phase, optical density), genome
+version, features associated with the publications (author list, year of
+publication, PMID), as well as reported database identifiers, plus any
+additional pertinent information.</em> (Tierrafría, Rioualen et al.,
+2022)</p>
+</blockquote>
+<p>In this report, I describe the generation of the collections of TUs,
+transcription start sites and termination sites HT datasets.</p>
+<div id="transcription-units" class="section level2">
+<h2>Transcription units</h2>
+<div id="format" class="section level3">
+<h3>Format</h3>
+<p>TUs are collected from a variety of sources and processed to produce
+uniform datasets in a bed-like format, with the following fields:</p>
+<ul>
+<li><strong>chromosome:</strong> NC_000913.3</li>
+<li><strong>start:</strong> Left genomic position</li>
+<li><strong>stop:</strong> Right genomic position</li>
+<li><strong>id:</strong> Unique TU ID</li>
+<li><strong>length:</strong> TU length</li>
+<li><strong>strand:</strong> TU strand reported by authors</li>
+<li><strong>gene_number:</strong> number of genes entirely contained in
+TU</li>
+<li><strong>genes:</strong> bnumbers of genes entirely contained in
+TU</li>
+<li><strong>pseudo:</strong> 1 if TU contains pseudo genes, else 0</li>
+<li><strong>phantom:</strong> 1 if TU contains phantom genes, else
+0</li>
+</ul>
+<p>NB: Some of this information may differ from the originally published
+data. For example, we chose to report only the genes that are entirely
+contained in the TUs, while some authors chose to report all genes
+intersecting with the TU coordinates. When needed, gene names were
+actualized to the latest annotations available, and TU coordinates were
+actualized to the genome version NC_000913.3.</p>
+</div>
+<div id="metadata" class="section level3">
+<h3>Metadata</h3>
+<p>Each collection is thoroughly described in its corresponding metadata
+table, generated through curation of literature and database
+exploration.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ht_tu_dir <span class="ot">&lt;-</span> <span class="fu">paste0</span>(ht_collection_dir, <span class="st">&quot;/collection_TU&quot;</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Read metadata table, filter out datasets that don&#39;t have a condition associated</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>ht_tu_metadata <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="fu">paste0</span>(ht_tu_dir, <span class="st">&quot;/DatasetCollection-TU-HT.xlsx&quot;</span>), <span class="at">sheet =</span> <span class="dv">1</span>, <span class="at">skip =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">dataset_id =</span> <span class="st">&quot;Dataset ID&quot;</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">pmid =</span> <span class="st">&quot;PMID&quot;</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">author =</span> <span class="st">&quot;Authors&quot;</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">condition =</span> <span class="st">&quot;Growth Conditions Experimental&quot;</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">file =</span> <span class="st">&quot;Dataset File Name&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">filepath =</span> <span class="fu">paste0</span>(ht_tu_dir, <span class="st">&quot;/author_files/&quot;</span>, file)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">first_author =</span> <span class="fu">str_split</span>(author, <span class="st">&quot;,&quot;</span>)[[<span class="dv">1</span>]][<span class="dv">1</span>]) <span class="sc">%&gt;%</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(dataset_id, pmid, author, first_author, condition, file, filepath) <span class="sc">%&gt;%</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(condition))</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="do">## Make dataset list from table</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>ht_tu_dataset_list <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">split</span>(ht_tu_metadata, <span class="fu">seq</span>(<span class="fu">nrow</span>(ht_tu_metadata))), ht_tu_metadata<span class="sc">$</span>dataset_id)</span></code></pre></div>
+<p>These are the TU datasets available:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Display datasets</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>DT1 <span class="ot">&lt;-</span> DT<span class="sc">::</span><span class="fu">datatable</span>(ht_tu_metadata <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>filepath), <span class="at">options =</span> <span class="fu">list</span>(<span class="at">dom =</span> <span class="st">&#39;&#39;</span>, <span class="at">pageLength =</span> <span class="dv">20</span>, <span class="at">autoWidth =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>DT1</span></code></pre></div>
+<div id="htmlwidget-c968e2f00b87e48d74f4" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c968e2f00b87e48d74f4">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5"],["TU0001","TU0002","TU0003","TU0004","TU0005"],[31308523,31308523,25006232,30201986,30201986],["Ju, X., D. Li and S. Liu","Ju, X., D. Li and S. Liu","Conway, T., J. P. Creecy, S. M. Maddox, J. E. Grissom, T. L. Conkle, T. M. Shadid, J. Teramoto, P. San Miguel, T. Shimada, A. Ishihama, H. Mori and B. L. Wanner","Yan, B., M. Boitano, T. A. Clark and L. Ettwiller","Yan, B., M. Boitano, T. A. Clark and L. Ettwiller"],["ORGANISM:Escherichia coli |MEDIUM:LB medium |GROWTH_PHASE:Exponential phase","ORGANISM:Escherichia coli |MEDIUM:LB medium |GROWTH_PHASE:Stationary phase","ORGANISM:Escherichia coli BW38028 |MEDIUM:MOPS |OPTICAL_DENSITY:OD600 of 0.4 |GROWTH_PHASE:Exponential phase","ORGANISM:Escherichia coli str. K-12 substr. MG1655 |GENETIC_BACKGROUND:wild type |MEDIUM:M9 minimal medium |GROWTH_PHASE:Exponential phase","ORGANISM:Escherichia coli str. K-12 substr. MG1655 |GENETIC_BACKGROUND:wild type |MEDIUM:rich medium |GROWTH_PHASE:Exponential phase"],["31308523_Ju-etal_ExpPhase_TU.xlsx","31308523_Ju-etal_stationary_TU.xlsx","25006232_Conway_MOPS-ExpPhase_TU.xlsx","30201986_Yan-etal_M9-ExpPhase.xlsx","30201986_Yan-etal_Rich-ExpPhase.xlsx"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>dataset_id<\/th>\n      <th>pmid<\/th>\n      <th>author<\/th>\n      <th>condition<\/th>\n      <th>file<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"","pageLength":20,"autoWidth":true,"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0}],"order":[],"orderClasses":false,"lengthMenu":[10,20,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="datasets-per-author" class="section level3 tabset">
+<h3 class="tabset">Datasets per author</h3>
+<p>This part is customized depending on the originally published files.
+Since those files are formatted each in their own way, this part semi
+manual and should be modified carefully.</p>
+<p>It generates one table per dataset, with the following columns:
+start, stop, strand.</p>
+<div id="conway-et-al.-2014" class="section level4">
+<h4>Conway et al., 2014</h4>
+<p>Reference article: <a
+href="https://doi.org/10.1128/mbio.01442-14">Conway et al., 2014</a></p>
+<p>Conditions:</p>
+<ul>
+<li>Exponential phase</li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li>Genome coordinates were converted from version U00096.2 to version
+U00096.3 using the library <a
+href="https://github.com/rioualen/EcoliGenes">EcoliGenes</a></li>
+</ul>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>TU0003 <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(ht_tu_dataset_list<span class="sc">$</span>TU0003<span class="sc">$</span>filepath, <span class="at">sheet =</span> <span class="dv">1</span>, <span class="at">skip =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(TU, STRAND) <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">strand =</span> STRAND) <span class="sc">%&gt;%</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">separate</span>(TU, <span class="fu">c</span>(<span class="st">&quot;left&quot;</span>, <span class="st">&quot;right&quot;</span>), <span class="at">sep =</span> <span class="st">&quot;:&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">distinct</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">left =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">&quot;^[A-Z]{1,2}-{1}&quot;</span>, <span class="st">&quot;&quot;</span>, left)),</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">right =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">&quot;^[A-Z]{1,2}-{1}&quot;</span>, <span class="st">&quot;&quot;</span>, right))) <span class="sc">%&gt;%</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">start =</span> EcoliGenes<span class="sc">::</span><span class="fu">convert_coords</span>(left),</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">stop =</span> EcoliGenes<span class="sc">::</span><span class="fu">convert_coords</span>(right)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(start, stop, strand)</span></code></pre></div>
+</div>
+<div id="ju-et-al.-2019" class="section level4">
+<h4>Ju et al., 2019</h4>
+<p>Reference article: <a
+href="https://doi.org/10.1038/s41564-019-0500-z">Ju et al., 2019</a></p>
+<p>Conditions:</p>
+<ul>
+<li>exponential phase</li>
+<li>stationary phase</li>
+</ul>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>TU0001 <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(ht_tu_dataset_list<span class="sc">$</span>TU0001<span class="sc">$</span>filepath, <span class="at">skip =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">start =</span> Boundary_of_transcript_unit...<span class="dv">1</span>, </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">stop =</span> Boundary_of_transcript_unit...<span class="dv">2</span>, </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">strand =</span> Direction_of_transcript_unit) <span class="sc">%&gt;%</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>Number_of_covered_annotated_genes, <span class="sc">-</span>Name_of_covered_Genes, <span class="sc">-</span>Length)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>TU0002 <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(ht_tu_dataset_list<span class="sc">$</span>TU0002<span class="sc">$</span>filepath, <span class="at">skip =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">start =</span> Boundary_of_transcript_unit...<span class="dv">1</span>, </span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">stop =</span> Boundary_of_transcript_unit...<span class="dv">2</span>, </span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">strand =</span> Direction_of_transcript_unit) <span class="sc">%&gt;%</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(start, stop, strand)</span></code></pre></div>
+</div>
+<div id="yan-et-al.-2018" class="section level4">
+<h4>Yan et al., 2018</h4>
+<p>Reference article: <a href="10.1038/s41467-018-05997-6">Yan et al.,
+2018</a></p>
+<p>Conditions:</p>
+<ul>
+<li>Rich (rich growth medium)</li>
+<li>M9 (minimal growth medium)</li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li>TUs are grouped in 2 files according to growth conditions</li>
+<li>Two types of TU termination are reported for each condition:
+detected TTS or longest read end</li>
+</ul>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>TU0004 <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(ht_tu_dataset_list<span class="sc">$</span>TU0004<span class="sc">$</span>filepath, <span class="at">skip =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">start =</span> TU_left_position, </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">stop =</span> TU_right_position, </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">strand =</span> TU_strand) <span class="sc">%&gt;%</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(start, stop, strand)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>TU0005 <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(ht_tu_dataset_list<span class="sc">$</span>TU0005<span class="sc">$</span>filepath, <span class="at">skip =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">start =</span> TU_left_position, </span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">stop =</span> TU_right_position, </span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">strand =</span> TU_strand) <span class="sc">%&gt;%</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(start, stop, strand)</span></code></pre></div>
+</div>
+</div>
+<div id="uniformization" class="section level3">
+<h3>Uniformization</h3>
+<p>This part assumes that the specificities of each individual dataset
+were dealt with previously. What it does:</p>
+<ul>
+<li>Generate unique IDs for TUs</li>
+<li>Generate additional columns (TU length, TU genes, TU gene number,
+flag columns for pseudo genes and phantom genes)</li>
+<li>Write one file per dataset</li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li>Only the genes that are entirely contained in the TUs are taken into
+account, regardless of what was reported by the authors in the original
+datasets.</li>
+<li>The step that consists in getting bnumbers from genes that are
+contained in each TU is a little slow.</li>
+</ul>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Write datasets to files</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>tu_datasets_list <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(ds_id <span class="cf">in</span> <span class="fu">names</span>(ht_tu_dataset_list)) {</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">&lt;-</span> <span class="fu">get</span>(ds_id) <span class="sc">%&gt;%</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">arrange</span>(start) <span class="sc">%&gt;%</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">id =</span> <span class="fu">paste0</span>(<span class="st">&quot;TU_&quot;</span>, ds_id, <span class="st">&quot;_&quot;</span>, dplyr<span class="sc">::</span><span class="fu">row_number</span>()),</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>                  <span class="at">chromosome =</span> <span class="st">&quot;NC_000913.3&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">rowwise</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">length =</span> stop <span class="sc">-</span> start <span class="sc">+</span> <span class="dv">1</span>,</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>                  <span class="at">genes =</span> EcoliGenes<span class="sc">::</span><span class="fu">what_genes</span>(start, stop, strand)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    tidyr<span class="sc">::</span><span class="fu">separate_rows</span>(genes, <span class="at">sep =</span> <span class="st">&quot;,&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">pseudo =</span> EcoliGenes<span class="sc">::</span><span class="fu">is_pseudo_gene</span>(genes),</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>                  <span class="at">phantom =</span> EcoliGenes<span class="sc">::</span><span class="fu">is_phantom_gene</span>(genes)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.character), concat_uniq),</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">across</span>(<span class="fu">where</span>(is.numeric), min),</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>                     <span class="at">gene_number =</span> <span class="fu">ifelse</span>(genes <span class="sc">==</span> <span class="st">&quot;&quot;</span>, <span class="dv">0</span>, <span class="fu">n</span>())) <span class="sc">%&gt;%</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">arrange</span>(start) </span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># write.table(df %&gt;% dplyr::select(chromosome, start, stop, id, length, strand, gene_number, genes, pseudo, phantom),</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>              <span class="co"># file = paste0(ht_tu_dir, &quot;/uniform_files/&quot;, ds_id, &quot;.tsv&quot;),</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>              <span class="co"># sep = &quot;\t&quot;, quote = F, col.names = T, row.names = F)</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assign</span>(ds_id, df)</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>  tu_datasets_list[[ds_id]] <span class="ot">&lt;-</span> df</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<ul>
+<li>Write a summary file for TU datasets</li>
+</ul>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>ht_tu_stats <span class="ot">&lt;-</span> ht_tu_metadata <span class="sc">%&gt;%</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rowwise</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">tu_number =</span> <span class="fu">nrow</span>(<span class="fu">get</span>(dataset_id))) <span class="sc">%&gt;%</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(dataset_id, pmid, author, condition, tu_number)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(ht_tu_stats, <span class="at">file =</span> <span class="fu">paste0</span>(ht_tu_dir, <span class="st">&quot;/TU_datasets.tsv&quot;</span>), <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">quote =</span> F, <span class="at">col.names =</span> T, <span class="at">row.names =</span> F)</span></code></pre></div>
+</div>
+<div id="results" class="section level3">
+<h3>Results</h3>
+<p>Summary of the TU datasets:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>DT2 <span class="ot">&lt;-</span> DT<span class="sc">::</span><span class="fu">datatable</span>(ht_tu_stats, <span class="at">options =</span> <span class="fu">list</span>(<span class="at">dom =</span> <span class="st">&#39;&#39;</span>, <span class="at">pageLength =</span> <span class="dv">20</span>)) <span class="sc">%&gt;%</span> DT<span class="sc">::</span><span class="fu">formatRound</span>(<span class="st">&#39;tu_number&#39;</span>, <span class="at">digits=</span><span class="dv">0</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>DT2</span></code></pre></div>
+<div id="htmlwidget-74ad921ae63e0a53f4e3" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-74ad921ae63e0a53f4e3">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5"],["TU0001","TU0002","TU0003","TU0004","TU0005"],["31308523","31308523","25006232","30201986","30201986"],["Ju, X., D. Li and S. Liu","Ju, X., D. Li and S. Liu","Conway, T., J. P. Creecy, S. M. Maddox, J. E. Grissom, T. L. Conkle, T. M. Shadid, J. Teramoto, P. San Miguel, T. Shimada, A. Ishihama, H. Mori and B. L. Wanner","Yan, B., M. Boitano, T. A. Clark and L. Ettwiller","Yan, B., M. Boitano, T. A. Clark and L. Ettwiller"],["ORGANISM:Escherichia coli |MEDIUM:LB medium |GROWTH_PHASE:Exponential phase","ORGANISM:Escherichia coli |MEDIUM:LB medium |GROWTH_PHASE:Stationary phase","ORGANISM:Escherichia coli BW38028 |MEDIUM:MOPS |OPTICAL_DENSITY:OD600 of 0.4 |GROWTH_PHASE:Exponential phase","ORGANISM:Escherichia coli str. K-12 substr. MG1655 |GENETIC_BACKGROUND:wild type |MEDIUM:M9 minimal medium |GROWTH_PHASE:Exponential phase","ORGANISM:Escherichia coli str. K-12 substr. MG1655 |GENETIC_BACKGROUND:wild type |MEDIUM:rich medium |GROWTH_PHASE:Exponential phase"],["3179","1916","2566","2458","2210"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>dataset_id<\/th>\n      <th>pmid<\/th>\n      <th>author<\/th>\n      <th>condition<\/th>\n      <th>tu_number<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"","pageLength":20,"columnDefs":[{"targets":5,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 0, 3, \",\", \".\", null);\n  }"},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[10,20,25,50,100]}},"evals":["options.columnDefs.0.render"],"jsHooks":[]}</script>
+<p>Number of TUs per dataset:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>ht_tu_stats_legends <span class="ot">&lt;-</span> ht_tu_stats  <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">first_author =</span> <span class="fu">str_split</span>(author, <span class="st">&quot;,&quot;</span>)[[<span class="dv">1</span>]][<span class="dv">1</span>])</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ht_tu_stats_legends, <span class="fu">aes</span>(<span class="at">x =</span> dataset_id, <span class="at">y =</span> tu_number, <span class="at">fill =</span> first_author)) <span class="sc">+</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust=</span><span class="dv">1</span>), <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>)) <span class="sc">+</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;Number of TUs&quot;</span>) <span class="sc">+</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;Dataset ID&quot;</span>) <span class="sc">+</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Number of TUs per dataset&quot;</span>) <span class="sc">+</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  ggsci<span class="sc">::</span><span class="fu">scale_fill_jco</span>()</span></code></pre></div>
+<p><img src="HT_collections_report_files/figure-html/fig-stats-tu-1-1.png" width="1152" style="display: block; margin: auto;" /></p>
+</div>
+<div id="comparison-with-classic-data" class="section level3">
+<h3>Comparison with classic data</h3>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="do">## upset plot</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>classic_set <span class="ot">&lt;-</span> <span class="fu">read.delim</span>(<span class="st">&quot;tu_set_2021-09-21.tsv&quot;</span>, <span class="at">header =</span> T) <span class="sc">%&gt;%</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># dplyr::rename(genes = valid_bnumbers)</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(classic <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rowwise</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">genes =</span> <span class="fu">ifelse</span>(strand <span class="sc">==</span> <span class="st">&quot;-&quot;</span>,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">concat_uniq</span>(<span class="fu">rev</span>(<span class="fu">strsplit</span>(valid_bnumbers, <span class="at">split =</span> <span class="st">&quot;,&quot;</span>)[[<span class="dv">1</span>]])),</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>                               valid_bnumbers)) <span class="sc">%&gt;%</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>tu_datasets_list[[<span class="st">&quot;RegulonDB 10.9&quot;</span>]] <span class="ot">&lt;-</span>  classic_set</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>collections <span class="ot">&lt;-</span> <span class="fu">names</span>(tu_datasets_list) </span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>tu_list <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (source <span class="cf">in</span> collections) {</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    tu_list[[source]] <span class="ot">&lt;-</span> tu_datasets_list[[source]] <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(genes) <span class="sc">%&gt;%</span> .<span class="sc">$</span>genes</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>UpSetR<span class="sc">::</span><span class="fu">upset</span>(<span class="fu">fromList</span>(tu_list), <span class="at">nsets =</span> <span class="dv">6</span>, <span class="at">number.angles =</span> <span class="dv">0</span>, <span class="at">point.size =</span> <span class="dv">2</span>, <span class="at">line.size =</span> <span class="dv">1</span>, </span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">mainbar.y.label =</span> <span class="st">&quot;Sets Intersections&quot;</span>, <span class="at">sets.x.label =</span> <span class="st">&quot;TU datasets&quot;</span>, </span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">text.scale =</span> <span class="fu">c</span>(<span class="fl">1.5</span>, <span class="fl">1.5</span>, <span class="fl">1.5</span>, <span class="fl">1.5</span>, <span class="fl">1.5</span>, <span class="fl">1.5</span>), <span class="at">order.by =</span> <span class="fu">c</span>(<span class="st">&quot;freq&quot;</span>, <span class="st">&quot;degree&quot;</span>),</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">keep.order =</span> T, <span class="at">sets =</span> <span class="fu">rev</span>(collections))</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>ht_tu_stats <span class="ot">&lt;-</span> <span class="fu">rbind</span>(ht_tu_stats, <span class="fu">c</span>(<span class="st">&quot;RegulonDB 10.9&quot;</span>, <span class="st">&quot;&quot;</span>, <span class="st">&quot;&quot;</span>, <span class="st">&quot;&quot;</span>, <span class="fu">nrow</span>(classic_set)))</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>DT2b <span class="ot">&lt;-</span> DT<span class="sc">::</span><span class="fu">datatable</span>(ht_tu_stats, <span class="at">options =</span> <span class="fu">list</span>(<span class="at">dom =</span> <span class="st">&#39;&#39;</span>, <span class="at">pageLength =</span> <span class="dv">20</span>)) <span class="sc">%&gt;%</span> DT<span class="sc">::</span><span class="fu">formatRound</span>(<span class="st">&#39;tu_number&#39;</span>, <span class="at">digits=</span><span class="dv">0</span>)</span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>DT2b</span></code></pre></div>
+</div>
+</div>
+<div id="transcription-start-sites-tss" class="section level2">
+<h2>Transcription start sites (TSS)</h2>
+<div id="format-1" class="section level3">
+<h3>Format</h3>
+<p>TSSs are collected from a variety of sources and processed to produce
+uniform bed-like dataset files with the following fields:</p>
+<ul>
+<li><strong>chromosome:</strong> NC_000913.3</li>
+<li><strong>start:</strong> Left genomic position. If not reported, will
+be the same as <code>pos_1</code></li>
+<li><strong>stop:</strong> Right genomic position. If not reported, will
+be the same as <code>pos_1</code></li>
+<li><strong>id:</strong> Unique TSS ID</li>
+<li><strong>pos_1:</strong> TSS +1 position reported by authors</li>
+<li><strong>strand:</strong> TSS strand reported by authors</li>
+</ul>
+</div>
+<div id="metadata-1" class="section level3">
+<h3>Metadata</h3>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>ht_tss_dir <span class="ot">&lt;-</span> <span class="fu">paste0</span>(ht_collection_dir, <span class="st">&quot;/collection_TSS&quot;</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Read metadata table</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>ht_tss_metadata <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="fu">paste0</span>(ht_tss_dir, <span class="st">&quot;/DatasetCollection-TSS-HT.xlsx&quot;</span>), <span class="at">sheet =</span> <span class="dv">1</span>, <span class="at">skip =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">dataset_id =</span> <span class="st">&quot;Dataset ID&quot;</span>,</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">pmid =</span> <span class="st">&quot;PMID&quot;</span>,</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">author =</span> <span class="st">&quot;Authors&quot;</span>,</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">condition =</span> <span class="st">&quot;Growth Conditions Experimental&quot;</span>,</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">file =</span> <span class="st">&quot;Dataset File Name&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">filepath =</span> <span class="fu">paste0</span>(ht_tss_dir, <span class="st">&quot;/author_files/&quot;</span>, file)) <span class="sc">%&gt;%</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">first_author =</span> <span class="fu">str_split</span>(author, <span class="st">&quot;,&quot;</span>)[[<span class="dv">1</span>]][<span class="dv">1</span>]) <span class="sc">%&gt;%</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(dataset_id, pmid, author, first_author, condition, file, filepath) </span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co">#dplyr::filter(!is.na(condition))</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="do">## Make list from table</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>ht_tss_dataset_list <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">split</span>(ht_tss_metadata, <span class="fu">seq</span>(<span class="fu">nrow</span>(ht_tss_metadata))), ht_tss_metadata<span class="sc">$</span>dataset_id)</span></code></pre></div>
+<p>Datasets:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Display datasets</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>DT3 <span class="ot">&lt;-</span> DT<span class="sc">::</span><span class="fu">datatable</span>(ht_tss_metadata <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>filepath, <span class="sc">-</span>author), <span class="at">options =</span> <span class="fu">list</span>(<span class="at">dom =</span> <span class="st">&#39;&#39;</span>, <span class="at">pageLength =</span> <span class="dv">20</span>, <span class="at">autoWidth =</span> <span class="cn">TRUE</span>, <span class="at">columnDefs =</span> <span class="fu">list</span>(<span class="fu">list</span>(<span class="at">width =</span> <span class="st">&#39;200px&#39;</span>, <span class="at">targets =</span> <span class="fu">c</span>(<span class="dv">4</span>)))))</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>DT3</span></code></pre></div>
+<div id="htmlwidget-b1a3fea7b58b984a25f6" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b1a3fea7b58b984a25f6">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16"],["DS0001","DS0002","DS0003","DS0004","DS0005","DS0006","DS0007","DS0008","DS0009","DS0010","DS0011","DS0012","DS0013","DS0014","DS0015","DS0016"],[25266388,25266388,25266388,31308523,31308523,25006232,30201986,30201986,19838305,19838305,23203884,null,null,null,null,null],["Thomason","Thomason","Thomason","Thomason","Thomason","Thomason","Thomason","Thomason","Thomason","Thomason","Thomason","Thomason","Thomason","Thomason","Thomason","Thomason"],["ORGANISM:'Escherichia coli str. K-12 substr. MG1655' |GENETIC_BACKGROUND:'wild type' |MEDIUM:LB |TEMPERATURE:'37.0 C' |OPTICAL_DENSITY:'OD600 of 2' |GROWTH_PHASE:'stationary phase'","ORGANISM:'Escherichia coli str. K-12 substr. MG1655' |GENETIC_BACKGROUND:'wild type' |MEDIUM:M63 |MEDIUM_SUPPLEMENTS:glucose 0.2%' 'thiamine(1+)' |TEMPERATURE:'37.0 C' |OPTICAL_DENSITY:'OD600 of 0.4' |GROWTH_PHASE:'exponential phase'","ORGANISM:'Escherichia coli str. K-12 substr. MG1655' |GENETIC_BACKGROUND:'wild type' |MEDIUM:LB |TEMPERATURE:'37.0 C' |OPTICAL_DENSITY:'OD600 of 0.4' |GROWTH_PHASE:'exponential phase'","ORGANISM:'Escherichia coli str. K-12 substr. MG1655' |MEDIUM:LB |AERATION:aerobic |TEMPERATURE:'37.0 C' |pH:'pH 7.4' |OPTICAL_DENSITY:'OD600 from 0.4 to 0.6' |GROWTH_PHASE:'exponential phase'","ORGANISM:'Escherichia coli str. K-12 substr. MG1655' |MEDIUM:LB |AERATION:aerobic |TEMPERATURE:'37.0 C' |pH:'pH 7.4' |OPTICAL_DENSITY:OD600 above 2.0 |GROWTH_PHASE:'stationary phase'","ORGANISM:'Escherichia coli BW38028' |GENETIC_BACKGROUND:'wild type' |MEDIUM:'MOPS minimal medium' |MEDIUM_SUPPLEMENTS:'glucose 0.2%' |AERATION:dissolved oxygen above 40% of saturation |TEMPERATURE:'37.0 C' |pH:'pH 7.4' |VESSEL_TYPE:fermenter","ORGANISM:'Escherichia coli str. K-12 substr. MG1655' |MEDIUM:'DSMZ Medium 382' |MEDIUM_SUPPLEMENTS:'glucose 0.2%' |TEMPERATURE:'37.0 C' |OPTICAL_DENSITY:OD600 from 0.55 to 0.6 |GROWTH_PHASE:'late exponential phase'","ORGANISM:'Escherichia coli str. K-12 substr. MG1655' |MEDIUM:'LB medium, Lennox' |TEMPERATURE:'37.0 C' |pH:pH 7.2 |OPTICAL_DENSITY:OD600 from 0.55 to 0.6 |GROWTH_PHASE:'late exponential phase'","ORGANISM:Escherichia coli str. K-12 substr. MG1655' |TEMPERATURE:'30.0 C'","ORGANISM:Escherichia coli str. K-12 substr. MG1655' |TEMPERATURE:'30.0 C'","ORGANISM:Escherichia coli str. K-12 substr. MG1655' |TEMPERATURE:'37.0 C' |AGITATION_SPEED:300 rpm",null,"GROWTH_PHASE: Exponential phase","Glutamine as source of nitrogen","Heat shock","GROWTH_PHASE:Stationary phase"],["25266388_ThomasonM-etal_LB_2.0-StationaryPhase_TSS.xlsx","25266388_ThomasonM-etal_M63-expPhase_TSS.xlsx","25266388_ThomasonM-etal_LB_0.4-ExpPhase_TSS.xlsx","31308523_JuX-etal_expPhase-log_TSS.xlsx","31308523_JuX-etal_stationaryPhase_TSS.xlsx","25006232_Conway-etal-MOPS_TSS.xlsx","30201986_YanB-etal-M9_TSS.xlsx","30201986_YanB-etal-Rich_TSS.xlsx","19838305_MendozaA-etal_TSS.xlsx","19838305_MendozaA-etal_RNASeq-RACE_TSS.xlsx","23203884_SalgadoH-etal_RNA-Seq-monophosphate_TSS.xlsx","Wade_promoters_21-09-21.xlsx","Palsson_promoters_22-03-21.xlsx","Palsson_promoters_22-03-21.xlsx","Palsson_promoters_22-03-21.xlsx","Palsson_promoters_22-03-21.xlsx"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>dataset_id<\/th>\n      <th>pmid<\/th>\n      <th>first_author<\/th>\n      <th>condition<\/th>\n      <th>file<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"","pageLength":20,"autoWidth":true,"columnDefs":[{"width":"200px","targets":4},{"className":"dt-right","targets":2},{"orderable":false,"targets":0}],"order":[],"orderClasses":false,"lengthMenu":[10,20,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="datasets-per-author-1" class="section level3 tabset">
+<h3 class="tabset">Datasets per author</h3>
+<div id="conway-et-al.-2014-1" class="section level4">
+<h4>Conway et al., 2014</h4>
+<p>Reference article: <a
+href="https://doi.org/10.1128/mbio.01442-14">Conway et al., 2014</a></p>
+<p>Conditions: NA</p>
+<p>Notes:</p>
+<ul>
+<li>Genome coordinates were converted from version U00096.2 to version
+U00096.3 using the library <a
+href="https://github.com/rioualen/EcoliGenes">EcoliGenes</a>.</li>
+</ul>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>DS0006 <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(ht_tss_dataset_list<span class="sc">$</span>DS0006<span class="sc">$</span>filepath, <span class="at">sheet =</span> <span class="dv">1</span>, <span class="at">skip =</span> <span class="dv">4</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">pos_1 =</span> <span class="fu">gsub</span>(<span class="st">&quot;^[PSIAS]{1,2}-&quot;</span>, <span class="st">&quot;&quot;</span>, Promoter), <span class="at">strand =</span> STRAND) <span class="sc">%&gt;%</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(strand, pos_1) <span class="sc">%&gt;%</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">distinct</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">pos_1 =</span> EcoliGenes<span class="sc">::</span><span class="fu">convert_coords</span>(pos_1)) <span class="sc">%&gt;%</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">start =</span> pos_1, <span class="at">stop =</span> pos_1) </span></code></pre></div>
+</div>
+<div id="ju-et-al.-2019-1" class="section level4">
+<h4>Ju et al., 2019</h4>
+<p>Reference article: <a
+href="https://doi.org/10.1038/s41564-019-0500-z">Ju et al., 2019</a></p>
+<p>Conditions:</p>
+<ul>
+<li>exponential phase</li>
+<li>stationary phase</li>
+</ul>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>DS0004 <span class="ot">&lt;-</span> <span class="fu">read_excel_cm</span>(ht_tss_dataset_list<span class="sc">$</span>DS0004<span class="sc">$</span>filepath, <span class="at">sheet =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">pos_1 =</span> TSS_site, </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">strand =</span> TSS_direction) <span class="sc">%&gt;%</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">start =</span> pos_1, <span class="at">stop =</span> pos_1) <span class="sc">%&gt;%</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(start, stop, strand, pos_1) <span class="sc">%&gt;%</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">distinct</span>()</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>DS0005 <span class="ot">&lt;-</span> <span class="fu">read_excel_cm</span>(ht_tss_dataset_list<span class="sc">$</span>DS0005<span class="sc">$</span>filepath, <span class="at">sheet =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">pos_1 =</span> TSS_site, </span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">strand =</span> TSS_direction) <span class="sc">%&gt;%</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">start =</span> pos_1, <span class="at">stop =</span> pos_1) <span class="sc">%&gt;%</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(start, stop, strand, pos_1) <span class="sc">%&gt;%</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">distinct</span>()</span></code></pre></div>
+</div>
+<div id="mendoza-vargas-et-al.-2009-salgado-et-al.-2013"
+class="section level4">
+<h4>Mendoza-Vargas et al., 2009; Salgado et al., 2013</h4>
+<p>Reference articles:</p>
+<ol style="list-style-type: decimal">
+<li><a
+href="https://doi.org/10.1371/journal.pone.0007526">Mendoza-Vargas et
+al., 2009</a></li>
+<li><a href="https://pubmed.ncbi.nlm.nih.gov/23203884/">Salgado et al.,
+2013</a></li>
+</ol>
+<p>Conditions/methodology:</p>
+<ul>
+<li>454 data (1)</li>
+<li>RACE data (1)</li>
+<li>5 tri or monophosphate enrichment (1, 2)</li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li>Files were downloaded on 2021/03/19 <a
+href="http://regulondb.ccg.unam.mx/highthroughputdatasetssearch?term=all">here</a></li>
+<li>Genome coordinates were converted from version U00096.2 to version
+U00096.3 using the library <a
+href="https://github.com/rioualen/EcoliGenes">EcoliGenes</a></li>
+<li>3 datasets files formatted differently:
+<ul>
+<li>One file has TSS left and right positions, as well as “max
+frequency” position.It also has “orientation” information.</li>
+<li>Two files have gene’s left and right coordinates, and relative
+position of the TSS to the gene (unique position is calculated depending
+on strand). These files don’t have relative orientation information</li>
+</ul></li>
+</ul>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">#--------------------------------------------------------------------------------------</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>DS0009 <span class="ot">&lt;-</span> <span class="fu">read_excel_cm</span>(ht_tss_dataset_list<span class="sc">$</span>DS0009<span class="sc">$</span>filepath, <span class="at">sheet =</span> <span class="dv">1</span>, <span class="at">comment.char =</span> <span class="st">&quot;#&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">strand =</span> Orientation, </span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">left =</span> <span class="st">`</span><span class="at">TSS Absolute genome left position</span><span class="st">`</span>, </span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">right =</span> <span class="st">`</span><span class="at">TSS Absolute genome right position</span><span class="st">`</span>, </span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">relative_pos =</span> <span class="st">`</span><span class="at">Relative distance to gene</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">tss_pos =</span> <span class="fu">ifelse</span>(strand <span class="sc">==</span> <span class="st">&quot;forward&quot;</span>, left <span class="sc">+</span> relative_pos, <span class="fu">ifelse</span>(strand <span class="sc">==</span> <span class="st">&quot;reverse&quot;</span>, right <span class="sc">-</span> relative_pos, <span class="cn">NA</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">pos_1 =</span> EcoliGenes<span class="sc">::</span><span class="fu">convert_coords</span>(tss_pos)) <span class="sc">%&gt;%</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">start =</span> pos_1, </span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">stop =</span> pos_1,</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>                <span class="at">strand =</span> <span class="fu">ifelse</span>(strand <span class="sc">==</span> <span class="st">&quot;reverse&quot;</span>, <span class="st">&quot;-&quot;</span>, <span class="fu">ifelse</span>(strand <span class="sc">==</span> <span class="st">&quot;forward&quot;</span>, <span class="st">&quot;+&quot;</span>, <span class="cn">NA</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(start, stop, strand, pos_1) <span class="sc">%&gt;%</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">distinct</span>() </span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>DS0010 <span class="ot">&lt;-</span> <span class="fu">read_excel_cm</span>(ht_tss_dataset_list<span class="sc">$</span>DS0010<span class="sc">$</span>filepath, <span class="at">sheet =</span> <span class="dv">1</span>, <span class="at">comment.char =</span> <span class="st">&quot;#&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">strand =</span> Orientation, </span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>                <span class="at">left =</span> <span class="st">`</span><span class="at">TSS Absolute genome left position</span><span class="st">`</span>, </span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>                <span class="at">right =</span> <span class="st">`</span><span class="at">TSS Absolute genome right position</span><span class="st">`</span>, </span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>               <span class="at">relative_pos =</span> <span class="st">`</span><span class="at">Relative orientation to gene</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">tss_pos =</span> <span class="fu">ifelse</span>(strand <span class="sc">==</span> <span class="st">&quot;forward&quot;</span>, left <span class="sc">+</span> relative_pos, <span class="fu">ifelse</span>(strand <span class="sc">==</span> <span class="st">&quot;reverse&quot;</span>, right <span class="sc">-</span> relative_pos, <span class="cn">NA</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">pos_1 =</span> EcoliGenes<span class="sc">::</span><span class="fu">convert_coords</span>(tss_pos)) <span class="sc">%&gt;%</span></span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">start =</span> pos_1, </span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>                <span class="at">stop =</span> pos_1,</span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>                <span class="at">strand =</span> <span class="fu">ifelse</span>(strand <span class="sc">==</span> <span class="st">&quot;reverse&quot;</span>, <span class="st">&quot;-&quot;</span>, <span class="fu">ifelse</span>(strand <span class="sc">==</span> <span class="st">&quot;forward&quot;</span>, <span class="st">&quot;+&quot;</span>, <span class="cn">NA</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(start, stop, strand, pos_1) <span class="sc">%&gt;%</span></span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">distinct</span>() </span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a><span class="co">#--------------------------------------------------------------------------------------</span></span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>DS0011 <span class="ot">&lt;-</span> <span class="fu">read_excel_cm</span>(ht_tss_dataset_list<span class="sc">$</span>DS0011<span class="sc">$</span>filepath, <span class="at">sheet =</span> <span class="dv">1</span>, <span class="at">comment.char =</span> <span class="st">&quot;#&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">strand =</span> Orientation, </span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>                <span class="at">left =</span> <span class="st">`</span><span class="at">TSS Absolute genome left position</span><span class="st">`</span>, </span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>                <span class="at">right =</span> <span class="st">`</span><span class="at">TSS Absolute genome right position</span><span class="st">`</span>, </span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>                <span class="at">tss_pos =</span> <span class="st">`</span><span class="at">TSS Max Frequency</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">pos_1 =</span> EcoliGenes<span class="sc">::</span><span class="fu">convert_coords</span>(tss_pos)) <span class="sc">%&gt;%</span></span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">start =</span> EcoliGenes<span class="sc">::</span><span class="fu">convert_coords</span>(left)) <span class="sc">%&gt;%</span></span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">stop =</span> EcoliGenes<span class="sc">::</span><span class="fu">convert_coords</span>(right)) <span class="sc">%&gt;%</span></span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">strand =</span> <span class="fu">ifelse</span>(strand <span class="sc">==</span> <span class="st">&quot;reverse&quot;</span>, <span class="st">&quot;-&quot;</span>, <span class="fu">ifelse</span>(strand <span class="sc">==</span> <span class="st">&quot;forward&quot;</span>, <span class="st">&quot;+&quot;</span>, <span class="cn">NA</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(start, stop, strand, pos_1) <span class="sc">%&gt;%</span></span>
+<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">distinct</span>() </span></code></pre></div>
+</div>
+<div id="cho-et-al.-2014" class="section level4">
+<h4>Cho et al., 2014</h4>
+<p>Reference article: <a
+href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3923258/">Cho et al.,
+2014</a></p>
+<p>Conditions:</p>
+<ul>
+<li>Exponential phase (from <a
+href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3415461/">2012
+paper</a>*)</li>
+<li>Glutamine as source of nitrogen</li>
+<li>Heat shock</li>
+<li>Stationary phase</li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li>All TSSs come in the supplementary table 6 from the 2014 article,
+and are separated in 4 distinct datasets</li>
+<li>Genome coordinates were converted from version U00096.2 to version
+U00096.3 using the library <a
+href="https://github.com/rioualen/EcoliGenes">EcoliGenes</a></li>
+</ul>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="do">##---------------------------------------------------------------------------------</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>Palsson_all <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(ht_tss_dataset_list<span class="sc">$</span>DS0013<span class="sc">$</span>filepath, <span class="at">sheet =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">strand =</span> Strand, <span class="at">condition =</span> Conditions, <span class="at">tss_pos =</span> <span class="st">`</span><span class="at">TSS position</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">pos_1 =</span> EcoliGenes<span class="sc">::</span><span class="fu">convert_coords</span>(tss_pos)) <span class="sc">%&gt;%</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">separate_rows</span>(condition, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate_all</span>(dplyr<span class="sc">::</span>na_if,<span class="st">&quot;&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(condition)) <span class="sc">%&gt;%</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">start =</span> pos_1, <span class="at">stop =</span> pos_1) <span class="sc">%&gt;%</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(start, stop, strand, pos_1, condition) <span class="sc">%&gt;%</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">distinct</span>() </span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="do">##---------------------------------------------------------------------------------</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>DS0013 <span class="ot">&lt;-</span> Palsson_all <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(condition <span class="sc">==</span> <span class="st">&quot;E&quot;</span>) <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>condition)</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>DS0014 <span class="ot">&lt;-</span> Palsson_all <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(condition <span class="sc">==</span> <span class="st">&quot;G&quot;</span>) <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>condition)</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>DS0015 <span class="ot">&lt;-</span> Palsson_all <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(condition <span class="sc">==</span> <span class="st">&quot;H&quot;</span>) <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>condition)</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>DS0016 <span class="ot">&lt;-</span> Palsson_all <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(condition <span class="sc">==</span> <span class="st">&quot;S&quot;</span>) <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>condition)</span></code></pre></div>
+</div>
+<div id="thomason-et-al.-2014" class="section level4">
+<h4>Thomason et al., 2014</h4>
+<p>Reference article: <a
+href="https://doi.org/10.1128/jb.02096-14">Thomason et al., 2014</a></p>
+<p>Conditions:</p>
+<ul>
+<li>LB growth medium, OD = 2.0 (stationary phase)</li>
+<li>Minimum growth medium, OD = 0.4 (exponential phase)</li>
+<li>LB growth medium, OD = 0.4 (exponential phase)</li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li>Genome coordinates were converted from version U00096.2 to version
+U00096.3 using the library <a
+href="https://github.com/rioualen/EcoliGenes">EcoliGenes</a></li>
+</ul>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>DS0001 <span class="ot">&lt;-</span> <span class="fu">read_excel_cm</span>(ht_tss_dataset_list<span class="sc">$</span>DS0001<span class="sc">$</span>filepath, <span class="at">sheet =</span> <span class="dv">1</span>, <span class="at">comment.char =</span> <span class="st">&quot;#&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(detected <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(Strand, Pos) <span class="sc">%&gt;%</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">distinct</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">pos_1 =</span> EcoliGenes<span class="sc">::</span><span class="fu">convert_coords</span>(Pos)) <span class="sc">%&gt;%</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">start =</span> pos_1, <span class="at">stop =</span> pos_1, <span class="at">strand =</span> Strand) <span class="sc">%&gt;%</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(start, stop, strand, pos_1)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>DS0002 <span class="ot">&lt;-</span> <span class="fu">read_excel_cm</span>(ht_tss_dataset_list<span class="sc">$</span>DS0002<span class="sc">$</span>filepath, <span class="at">sheet =</span> <span class="dv">1</span>, <span class="at">comment.char =</span> <span class="st">&quot;#&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(detected <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(Strand, Pos) <span class="sc">%&gt;%</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">distinct</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">pos_1 =</span> EcoliGenes<span class="sc">::</span><span class="fu">convert_coords</span>(Pos)) <span class="sc">%&gt;%</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">start =</span> pos_1, <span class="at">stop =</span> pos_1, <span class="at">strand =</span> Strand) <span class="sc">%&gt;%</span></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(start, stop, strand, pos_1)</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>DS0003 <span class="ot">&lt;-</span> <span class="fu">read_excel_cm</span>(ht_tss_dataset_list<span class="sc">$</span>DS0003<span class="sc">$</span>filepath, <span class="at">sheet =</span> <span class="dv">1</span>, <span class="at">comment.char =</span> <span class="st">&quot;#&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(detected <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(Strand, Pos) <span class="sc">%&gt;%</span></span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">distinct</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">pos_1 =</span> EcoliGenes<span class="sc">::</span><span class="fu">convert_coords</span>(Pos)) <span class="sc">%&gt;%</span></span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">start =</span> pos_1, <span class="at">stop =</span> pos_1, <span class="at">strand =</span> Strand) <span class="sc">%&gt;%</span></span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(start, stop, strand, pos_1)</span></code></pre></div>
+</div>
+<div id="wade-lab" class="section level4">
+<h4>Wade lab</h4>
+<p>Data not published, refer to <a
+href="https://doi.org/10.1007/978-1-62703-730-3_1">this article</a> for
+details on experimental methods.</p>
+<p>Conditions:</p>
+<ul>
+<li>M9 + 0.2% glycerol, cells grown with shaking at 30°C</li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li>TSSs queried from private database on 2021-09-21</li>
+</ul>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>DS0012 <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(ht_tss_dataset_list<span class="sc">$</span>DS0012<span class="sc">$</span>filepath, <span class="at">sheet =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">pos_1 =</span> start) <span class="sc">%&gt;%</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(start, stop, strand, pos_1) <span class="sc">%&gt;%</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">distinct</span>() </span></code></pre></div>
+</div>
+<div id="yan-et-al.-2018-1" class="section level4">
+<h4>Yan et al., 2018</h4>
+<p>Reference paper: <a href="10.1038/s41467-018-05997-6">Yan et al.,
+2018</a></p>
+<p>Conditions:</p>
+<ul>
+<li>M9</li>
+<li>Rich</li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li>HT-inferred TSSs from PacBio long read data</li>
+</ul>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>DS0007 <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(ht_tss_dataset_list<span class="sc">$</span>DS0007<span class="sc">$</span>filepath, <span class="at">sheet =</span> <span class="dv">1</span>)  <span class="sc">%&gt;%</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">start =</span> TSS_left_position, </span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">stop =</span> TSS_right_position, </span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">pos_1 =</span> TSS_site,</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">strand =</span> TSS_strand) <span class="sc">%&gt;%</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(start, stop, strand, pos_1) <span class="sc">%&gt;%</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">distinct</span>()</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>DS0008 <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(ht_tss_dataset_list<span class="sc">$</span>DS0008<span class="sc">$</span>filepath, <span class="at">sheet =</span> <span class="dv">1</span>)  <span class="sc">%&gt;%</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">start =</span> TSS_left_position, </span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>                  <span class="at">stop =</span> TSS_right_position, </span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>                  <span class="at">pos_1 =</span> TSS_site,</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>                  <span class="at">strand =</span> TSS_strand) <span class="sc">%&gt;%</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(start, stop, strand, pos_1) <span class="sc">%&gt;%</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">distinct</span>()</span></code></pre></div>
+</div>
+</div>
+<div id="uniformization-1" class="section level3">
+<h3>Uniformization</h3>
+<ul>
+<li>Generate unique IDs for TSSs</li>
+<li>Write one file per dataset</li>
+</ul>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>tss_datasets_list <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Uniformize format, add TSS ID column, write file</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(ds_id <span class="cf">in</span> <span class="fu">names</span>(ht_tss_dataset_list)) {</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">&lt;-</span> <span class="fu">get</span>(ds_id) <span class="sc">%&gt;%</span> <span class="do">##### OJO con estos que no se actualizan ## ?</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">arrange</span>(start) <span class="sc">%&gt;%</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">id =</span> <span class="fu">paste0</span>(<span class="st">&quot;TSS_&quot;</span>, ds_id, <span class="st">&quot;_&quot;</span>, dplyr<span class="sc">::</span><span class="fu">row_number</span>())) <span class="sc">%&gt;%</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">chromosome =</span> <span class="st">&quot;NC_000913.3&quot;</span>)</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write.table</span>(df <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(chromosome, start, stop, id, pos_1, strand),</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>              <span class="at">file =</span> <span class="fu">paste0</span>(ht_tss_dir, <span class="st">&quot;/uniform_files/&quot;</span>, ds_id, <span class="st">&quot;.tsv&quot;</span>),</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>              <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">quote =</span> F, <span class="at">col.names =</span> T, <span class="at">row.names =</span> F)</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>  tss_datasets_list[[ds_id]] <span class="ot">&lt;-</span> df</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a><span class="do">## get all in one dataframe</span></span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>all_tss <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">matrix</span>(<span class="at">ncol =</span> <span class="dv">6</span>, <span class="at">nrow =</span> <span class="dv">0</span>))</span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(ds_id <span class="cf">in</span> <span class="fu">names</span>(tss_datasets_list)) {</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>  all_tss <span class="ot">&lt;-</span> <span class="fu">rbind.data.frame</span>(all_tss, tss_datasets_list[[ds_id]])</span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>all_tss <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(pos_1 <span class="sc">&gt;=</span> <span class="dv">180840</span> <span class="sc">&amp;</span> pos_1 <span class="sc">&lt;=</span> <span class="dv">180850</span>)</span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>reference_set <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(start <span class="sc">&gt;=</span> <span class="dv">180840</span> <span class="sc">&amp;</span> start <span class="sc">&lt;=</span> <span class="dv">180850</span>)</span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>classic_set <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(start <span class="sc">&gt;=</span> <span class="dv">180840</span> <span class="sc">&amp;</span> start <span class="sc">&lt;=</span> <span class="dv">180850</span>)</span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a><span class="co"># DT9 &lt;- DT::datatable(all_tss, options = list(dom = &#39;&#39;, pageLength = 5)) </span></span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a><span class="co"># DT9</span></span></code></pre></div>
+<ul>
+<li>Write a summary file for TSS datasets</li>
+</ul>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>ht_tss_stats <span class="ot">&lt;-</span> ht_tss_metadata <span class="sc">%&gt;%</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rowwise</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">tss_number =</span> <span class="fu">nrow</span>(<span class="fu">get</span>(dataset_id))) <span class="sc">%&gt;%</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(dataset_id, pmid, author, condition, tss_number)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(ht_tss_stats, <span class="at">file =</span> <span class="fu">paste0</span>(ht_tss_dir, <span class="st">&quot;/TSS_datasets.tsv&quot;</span>), <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">quote =</span> F, <span class="at">col.names =</span> T, <span class="at">row.names =</span> F)</span></code></pre></div>
+</div>
+<div id="results-1" class="section level3">
+<h3>Results</h3>
+<p>Summary of datasets</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>DT4 <span class="ot">&lt;-</span> DT<span class="sc">::</span><span class="fu">datatable</span>(ht_tss_stats, <span class="at">options =</span> <span class="fu">list</span>(<span class="at">dom =</span> <span class="st">&#39;&#39;</span>, <span class="at">pageLength =</span> <span class="dv">20</span>)) <span class="sc">%&gt;%</span> DT<span class="sc">::</span><span class="fu">formatRound</span>(<span class="st">&#39;tss_number&#39;</span>, <span class="at">digits=</span><span class="dv">0</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>DT4</span></code></pre></div>
+<div id="htmlwidget-e6b0cb067ac237513b24" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-e6b0cb067ac237513b24">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16"],["DS0001","DS0002","DS0003","DS0004","DS0005","DS0006","DS0007","DS0008","DS0009","DS0010","DS0011","DS0012","DS0013","DS0014","DS0015","DS0016"],[25266388,25266388,25266388,31308523,31308523,25006232,30201986,30201986,19838305,19838305,23203884,null,null,null,null,null],["Thomason, M. K., T. Bischler, S. K. Eisenbart, K. U. Förstner, A. Zhang, A. Herbig, K. Nieselt, C. M. Sharma and G. Storz","Thomason, M. K., T. Bischler, S. K. Eisenbart, K. U. Förstner, A. Zhang, A. Herbig, K. Nieselt, C. M. Sharma and G. Storz","Thomason, M. K., T. Bischler, S. K. Eisenbart, K. U. Förstner, A. Zhang, A. Herbig, K. Nieselt, C. M. Sharma and G. Storz","Ju, X., D. Li and S. Liu","Ju, X., D. Li and S. Liu","Conway, T., J. P. Creecy, S. M. Maddox, J. E. Grissom, T. L. Conkle, T. M. Shadid, J. Teramoto, P. San Miguel, T. Shimada, A. Ishihama, H. Mori and B. L. Wanner","Yan, B., M. Boitano, T. A. Clark and L. Ettwiller","Yan, B., M. Boitano, T. A. Clark and L. Ettwiller","Mendoza-Vargas, A., L. Olvera, M. Olvera, R. Grande, L. Vega-Alvarado, B. Taboada, V. Jimenez-Jacinto, H. Salgado, K. Juárez, B. Contreras-Moreira, A. M. Huerta, J. Collado-Vides and E. Morett","Mendoza-Vargas, A., L. Olvera, M. Olvera, R. Grande, L. Vega-Alvarado, B. Taboada, V. Jimenez-Jacinto, H. Salgado, K. Juárez, B. Contreras-Moreira, A. M. Huerta, J. Collado-Vides and E. Morett","Salgado, H., M. Peralta-Gil, S. Gama-Castro, A. Santos-Zavaleta, L. Muniz-Rascado, J. S. Garcia-Sotelo, V. Weiss, H. Solano-Lira, I. Martinez-Flores, A. Medina-Rivera, G. Salgado-Osorio, S. Alquicira-Hernandez, K. Alquicira-Hernandez, A. Lopez-Fuentes, L. Porron-Sotelo, A. M. Huerta, C. Bonavides-Martinez, Y. I. Balderas-Martinez, L. Pannier, M. Olvera, A. Labastida, V. Jimenez-Jacinto, L. Vega-Alvarado, V. Del Moral-Chavez, A. Hernandez-Alvarez, E. Morett and J. Collado-Vides","Wade","Palsson","Palsson","Palsson","Palsson"],["ORGANISM:'Escherichia coli str. K-12 substr. MG1655' |GENETIC_BACKGROUND:'wild type' |MEDIUM:LB |TEMPERATURE:'37.0 C' |OPTICAL_DENSITY:'OD600 of 2' |GROWTH_PHASE:'stationary phase'","ORGANISM:'Escherichia coli str. K-12 substr. MG1655' |GENETIC_BACKGROUND:'wild type' |MEDIUM:M63 |MEDIUM_SUPPLEMENTS:glucose 0.2%' 'thiamine(1+)' |TEMPERATURE:'37.0 C' |OPTICAL_DENSITY:'OD600 of 0.4' |GROWTH_PHASE:'exponential phase'","ORGANISM:'Escherichia coli str. K-12 substr. MG1655' |GENETIC_BACKGROUND:'wild type' |MEDIUM:LB |TEMPERATURE:'37.0 C' |OPTICAL_DENSITY:'OD600 of 0.4' |GROWTH_PHASE:'exponential phase'","ORGANISM:'Escherichia coli str. K-12 substr. MG1655' |MEDIUM:LB |AERATION:aerobic |TEMPERATURE:'37.0 C' |pH:'pH 7.4' |OPTICAL_DENSITY:'OD600 from 0.4 to 0.6' |GROWTH_PHASE:'exponential phase'","ORGANISM:'Escherichia coli str. K-12 substr. MG1655' |MEDIUM:LB |AERATION:aerobic |TEMPERATURE:'37.0 C' |pH:'pH 7.4' |OPTICAL_DENSITY:OD600 above 2.0 |GROWTH_PHASE:'stationary phase'","ORGANISM:'Escherichia coli BW38028' |GENETIC_BACKGROUND:'wild type' |MEDIUM:'MOPS minimal medium' |MEDIUM_SUPPLEMENTS:'glucose 0.2%' |AERATION:dissolved oxygen above 40% of saturation |TEMPERATURE:'37.0 C' |pH:'pH 7.4' |VESSEL_TYPE:fermenter","ORGANISM:'Escherichia coli str. K-12 substr. MG1655' |MEDIUM:'DSMZ Medium 382' |MEDIUM_SUPPLEMENTS:'glucose 0.2%' |TEMPERATURE:'37.0 C' |OPTICAL_DENSITY:OD600 from 0.55 to 0.6 |GROWTH_PHASE:'late exponential phase'","ORGANISM:'Escherichia coli str. K-12 substr. MG1655' |MEDIUM:'LB medium, Lennox' |TEMPERATURE:'37.0 C' |pH:pH 7.2 |OPTICAL_DENSITY:OD600 from 0.55 to 0.6 |GROWTH_PHASE:'late exponential phase'","ORGANISM:Escherichia coli str. K-12 substr. MG1655' |TEMPERATURE:'30.0 C'","ORGANISM:Escherichia coli str. K-12 substr. MG1655' |TEMPERATURE:'30.0 C'","ORGANISM:Escherichia coli str. K-12 substr. MG1655' |TEMPERATURE:'37.0 C' |AGITATION_SPEED:300 rpm",null,"GROWTH_PHASE: Exponential phase","Glutamine as source of nitrogen","Heat shock","GROWTH_PHASE:Stationary phase"],[12016,11945,8504,4353,4033,2122,2186,1902,1468,296,5197,5647,1926,2230,1900,2533]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>dataset_id<\/th>\n      <th>pmid<\/th>\n      <th>author<\/th>\n      <th>condition<\/th>\n      <th>tss_number<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"","pageLength":20,"columnDefs":[{"targets":5,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 0, 3, \",\", \".\", null);\n  }"},{"className":"dt-right","targets":[2,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[10,20,25,50,100]}},"evals":["options.columnDefs.0.render"],"jsHooks":[]}</script>
+<p>Distribution</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>ref <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Thomason et al., 2014&quot;</span>, <span class="st">&quot;Thomason et al., 2014&quot;</span>, <span class="st">&quot;Thomason et al., 2014&quot;</span>, <span class="st">&quot;Ju et al., 2019&quot;</span>, <span class="st">&quot;Ju et al., 2019&quot;</span>, <span class="st">&quot;Conway et al., 2014&quot;</span>, <span class="st">&quot;Yan et al., 2018&quot;</span>, <span class="st">&quot;Yan et al., 2018&quot;</span>, <span class="st">&quot;Mendoza-Vargas et al., 2009&quot;</span>, <span class="st">&quot;Mendoza-Vargas et al., 2009&quot;</span>, <span class="st">&quot;Salgado et al., 2013&quot;</span>, <span class="st">&quot;Wade group (not published)&quot;</span>, <span class="st">&quot;Cho et al., 2014&quot;</span>, <span class="st">&quot;Cho et al., 2014&quot;</span>, <span class="st">&quot;Cho et al., 2014&quot;</span>, <span class="st">&quot;Cho et al., 2014&quot;</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>ht_tss_stats <span class="ot">&lt;-</span> ht_tss_stats  <span class="sc">%&gt;%</span> <span class="fu">cbind.data.frame</span>(ref)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ht_tss_stats, <span class="fu">aes</span>(<span class="at">x =</span> dataset_id, <span class="at">y =</span> tss_number, <span class="at">fill =</span> ref)) <span class="sc">+</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust=</span><span class="dv">1</span>), <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>)) <span class="sc">+</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;Number of TSSs&quot;</span>) <span class="sc">+</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;Dataset ID&quot;</span>) <span class="sc">+</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Number of TSSs per dataset&quot;</span>) <span class="sc">+</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>  ggsci<span class="sc">::</span><span class="fu">scale_fill_jco</span>()</span></code></pre></div>
+<p><img src="HT_collections_report_files/figure-html/fig-stats-tss-1-1.png" width="1152" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mapping-with-classic-tsss" class="section level3">
+<h3>Mapping with classic TSSs</h3>
+<p>Reference set of classic TSSs:</p>
+<ul>
+<li>PromoterSet release 10.9 from RegulonDB</li>
+<li>TSSs that have only HT and/or prediction evidence are removed</li>
+<li>Coords-less TSSs are removed</li>
+<li>Only “Strong” and “Confirmed” evidence ones are kept</li>
+</ul>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Get experimental promoters</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>exp_all <span class="ot">&lt;-</span> <span class="fu">read.delim</span>(<span class="st">&quot;~/Desktop/Data/RegulonDB/downloaded/PromoterSet_10.9.txt&quot;</span>, <span class="at">comment.char =</span> <span class="st">&quot;#&quot;</span>, <span class="at">header =</span> F)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(exp_all) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;regulondb_id&quot;</span>, <span class="st">&quot;name&quot;</span>, <span class="st">&quot;strand&quot;</span>, <span class="st">&quot;pos_1&quot;</span>, <span class="st">&quot;sigma&quot;</span>, <span class="st">&quot;sequence&quot;</span>, <span class="st">&quot;evidence&quot;</span>, <span class="st">&quot;confidence&quot;</span>)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Removing HT and predicted promoters from the &quot;experimental&quot; dataset</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>evidence_to_remove <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;[ICWHO|W|Inferred computationally without human oversight],[RS-EPT-CBR|S|RNA-seq using two enrichment strategies for primary transcripts and consistent biological replicates]&quot;</span>,</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>                        <span class="st">&quot;[RS-EPT-CBR|S|RNA-seq using two enrichment strategies for primary transcripts and consistent biological replicates],[ICWHO|W|Inferred computationally without human oversight]&quot;</span>,</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>                        <span class="st">&quot;[RS-EPT-CBR|S|RNA-seq using two enrichment strategies for primary transcripts and consistent biological replicates]&quot;</span>,</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>                        <span class="st">&quot;[ICWHO|W|Inferred computationally without human oversight]&quot;</span>)</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>exp_filtered <span class="ot">&lt;-</span> exp_all <span class="sc">%&gt;%</span> </span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="sc">!</span>evidence <span class="sc">%in%</span> evidence_to_remove) <span class="sc">%&gt;%</span></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(confidence <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;Strong&quot;</span>, <span class="st">&quot;Confirmed&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="sc">!</span> pos_1 <span class="sc">==</span>  <span class="dv">0</span>) </span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a><span class="do">## Formatting)</span></span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>exp_formatted <span class="ot">&lt;-</span> exp_filtered <span class="sc">%&gt;%</span> </span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rowwise</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">strand =</span> <span class="fu">ifelse</span>(strand <span class="sc">==</span> <span class="st">&quot;reverse&quot;</span>, <span class="st">&quot;-&quot;</span>, <span class="fu">ifelse</span>(strand <span class="sc">==</span> <span class="st">&quot;forward&quot;</span>, <span class="st">&quot;+&quot;</span>,<span class="cn">NA</span>)),</span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>         <span class="at">start =</span> <span class="fu">ifelse</span>(pos_1 <span class="sc">==</span> <span class="dv">0</span>, <span class="cn">NA</span>, pos_1),</span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>         <span class="at">stop =</span> <span class="fu">ifelse</span>(pos_1 <span class="sc">==</span> <span class="dv">0</span>, <span class="cn">NA</span>, pos_1),</span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>         <span class="co"># condition = cond,</span></span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>         <span class="at">technology =</span> <span class="st">&quot;classic&quot;</span>,</span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>         <span class="at">source =</span> <span class="st">&quot;RegulonDB&quot;</span>,</span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>         <span class="at">orientation =</span> <span class="cn">NA</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">arrange</span>(start) <span class="sc">%&gt;%</span></span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(name, start, stop, strand, orientation, technology, source, regulondb_id) <span class="co">#condition</span></span>
+<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a>reference_set <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(exp_formatted)</span></code></pre></div>
+<ul>
+<li>Compare each HT dataset against RegulonDB classic TSSs and the
+reverse</li>
+</ul>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="do">## get matches for classic against each dataset seperately, depending on distance (nb boolean answer)</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co"># matches_soco &lt;- list()</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co"># for(ds_id in names(tss_datasets_list)) {</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   classic_set_mapped &lt;- classic_set %&gt;%</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   dplyr::mutate(match_ht_5nt = tss_matching(pos_1, strand, d = 5, ref = get(ds_id))) %&gt;%</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   dplyr::mutate(match_ht_1nt = tss_matching(pos_1, strand, d = 1, ref = get(ds_id)))  %&gt;%</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="co">#   dplyr::mutate(match_ht_0nt = tss_matching(pos_1, strand, d = 0, ref = get(ds_id)))</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="co">#   matches_soco[[ds_id]] &lt;- classic_set_mapped</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="co"># }</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a><span class="co"># openxlsx::write.xlsx(matches_soco, file = &#39;TSS_match_classic_vs_HT_each.xlsx&#39;)</span></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="do">## get matches from all datasets at once</span></span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a><span class="do">## ojo aqui escribi una funcion alternative donde solo se considera el pos_1. NO el start/stop que tienen algunos datasets HT de TSS</span></span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>matches_soco_df <span class="ot">&lt;-</span> classic_set </span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(ds_id <span class="cf">in</span> <span class="fu">names</span>(tss_datasets_list)) {</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>  matches_soco_df <span class="ot">&lt;-</span> matches_soco_df <span class="sc">%&gt;%</span> </span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="st">&quot;dist_5nt_{ds_id}&quot;</span> <span class="sc">:</span><span class="er">=</span> <span class="fu">tss_matching_2</span>(pos_1, strand, <span class="at">d =</span> <span class="dv">5</span>, <span class="at">ref =</span> <span class="fu">get</span>(ds_id))) <span class="sc">%&gt;%</span></span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="st">&quot;dist_1nt_{ds_id}&quot;</span> <span class="sc">:</span><span class="er">=</span> <span class="fu">tss_matching_2</span>(pos_1, strand, <span class="at">d =</span> <span class="dv">1</span>, <span class="at">ref =</span> <span class="fu">get</span>(ds_id))) <span class="sc">%&gt;%</span></span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="st">&quot;dist_0nt_{ds_id}&quot;</span> <span class="sc">:</span><span class="er">=</span> <span class="fu">tss_matching_2</span>(pos_1, strand, <span class="at">d =</span> <span class="dv">0</span>, <span class="at">ref =</span> <span class="fu">get</span>(ds_id)))</span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>matches_soco_df <span class="ot">&lt;-</span> matches_soco_df <span class="sc">%&gt;%</span></span>
+<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">total_match_5nt =</span> <span class="fu">rowSums</span>(<span class="fu">across</span>(<span class="fu">contains</span>(<span class="st">&quot;5nt&quot;</span>)))) <span class="sc">%&gt;%</span></span>
+<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">total_match_1nt =</span> <span class="fu">rowSums</span>(<span class="fu">across</span>(<span class="fu">contains</span>(<span class="st">&quot;1nt&quot;</span>)))) <span class="sc">%&gt;%</span></span>
+<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">total_match_0nt =</span> <span class="fu">rowSums</span>(<span class="fu">across</span>(<span class="fu">contains</span>(<span class="st">&quot;0nt&quot;</span>)))) <span class="sc">%&gt;%</span></span>
+<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(name, start, stop, pos_1, strand, source, regulondb_id, <span class="fu">contains</span>(<span class="st">&quot;total&quot;</span>), <span class="fu">everything</span>(), <span class="sc">-</span>id, <span class="sc">-</span>dataset_id, <span class="sc">-</span>chromosome, <span class="sc">-</span>orientation, <span class="sc">-</span>technology)</span>
+<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-33"><a href="#cb28-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-34"><a href="#cb28-34" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(matches_soco_df, <span class="at">file =</span> <span class="st">&#39;TSS_match_classic_vs_HT.tsv&#39;</span>, <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">quote =</span> F, <span class="at">col.names =</span> T, <span class="at">row.names =</span> F)</span></code></pre></div>
+<ul>
+<li>3-panel paper-ready figure</li>
+</ul>
+</div>
+</div>
+<div id="transcription-termination-sites-tts" class="section level2">
+<h2>Transcription termination sites (TTS)</h2>
+<div id="format-2" class="section level3">
+<h3>Format</h3>
+<p>TTSs are collected from a variety of sources and processed to produce
+uniform bed-like dataset files with the following fields:</p>
+<ul>
+<li><strong>chromosome:</strong> NC_000913.3</li>
+<li><strong>start:</strong> Left genomic position. If not reported, will
+be the same as <code>term_pos</code></li>
+<li><strong>stop:</strong> Right genomic position. If not reported, will
+be the same as <code>term_pos</code></li>
+<li><strong>id:</strong> Unique TSS ID</li>
+<li><strong>term_pos:</strong> Terminal position reported by
+authors</li>
+<li><strong>strand:</strong> TTS strand reported by authors</li>
+</ul>
+</div>
+<div id="metadata-2" class="section level3">
+<h3>Metadata</h3>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>ht_tts_dir <span class="ot">&lt;-</span> <span class="fu">paste0</span>(ht_collection_dir, <span class="st">&quot;/collection_TTS&quot;</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Read metadata table, filter out datasets that don&#39;t have a condition associated</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>ht_tts_metadata <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="fu">paste0</span>(ht_tts_dir, <span class="st">&quot;/DatasetCollection-TTS-HT.xlsx&quot;</span>), <span class="at">sheet =</span> <span class="dv">1</span>, <span class="at">skip =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">dataset_id =</span> <span class="st">&quot;Dataset ID&quot;</span>,</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">pmid =</span> <span class="st">&quot;PMID&quot;</span>,</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">author =</span> <span class="st">&quot;Authors&quot;</span>,</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">condition =</span> <span class="st">&quot;Growth Conditions Experimental&quot;</span>,</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">file =</span> <span class="st">&quot;Dataset File Name&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">filepath =</span> <span class="fu">paste0</span>(ht_tts_dir, <span class="st">&quot;/author_files/&quot;</span>, file)) <span class="sc">%&gt;%</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">first_author =</span> <span class="fu">str_split</span>(author, <span class="st">&quot;,&quot;</span>)[[<span class="dv">1</span>]][<span class="dv">1</span>]) <span class="sc">%&gt;%</span></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(dataset_id, pmid, author, first_author, condition, file, filepath) <span class="sc">%&gt;%</span></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(condition))</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a><span class="do">## Make dataset list from table</span></span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>ht_tts_dataset_list <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">split</span>(ht_tts_metadata, <span class="fu">seq</span>(<span class="fu">nrow</span>(ht_tts_metadata))), ht_tts_metadata<span class="sc">$</span>dataset_id)</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Display datasets</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>DT5 <span class="ot">&lt;-</span> DT<span class="sc">::</span><span class="fu">datatable</span>(ht_tts_metadata <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>filepath, <span class="sc">-</span>author), <span class="at">options =</span> <span class="fu">list</span>(<span class="at">dom =</span> <span class="st">&#39;&#39;</span>, <span class="at">pageLength =</span> <span class="dv">20</span>, <span class="at">autoWidth =</span> <span class="cn">TRUE</span>, <span class="at">columnDefs =</span> <span class="fu">list</span>(<span class="fu">list</span>(<span class="at">width =</span> <span class="st">&#39;200px&#39;</span>, <span class="at">targets =</span> <span class="fu">c</span>(<span class="dv">4</span>)))))</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>DT5</span></code></pre></div>
+<div id="htmlwidget-6a695e27233b7744db0b" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-6a695e27233b7744db0b">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5"],["TR0001","TR0002","TR0003","TR0004","TR0005"],[31308523,31308523,25006232,30201986,30201986],["Ju","Ju","Ju","Ju","Ju"],["ORGANISM:Escherichia coli |MEDIUM:LB medium |GROWTH_PHASE:Exponential phase","ORGANISM:Escherichia coli |MEDIUM:LB medium |GROWTH_PHASE:Stationary phase","ORGANISM:Escherichia coli BW38028 |MEDIUM:MOPS |OPTICAL_DENSITY:OD600 of 0.4 |GROWTH_PHASE:Exponential phase","ORGANISM:Escherichia coli str. K-12 substr. MG1655 |GENETIC_BACKGROUND:wild type |MEDIUM:M9 minimal medium |GROWTH_PHASE:Exponential phase","ORGANISM:Escherichia coli str. K-12 substr. MG1655 |GENETIC_BACKGROUND:wild type |MEDIUM:rich medium |GROWTH_PHASE:Exponential phase"],["31308523_JU_log.xlsx","31308523_JU_Stationary.xlsx","25006232_Conway.xlsx","30201986_YanB_M9.xlsx","30201986_YanB_Rich.xlsx"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>dataset_id<\/th>\n      <th>pmid<\/th>\n      <th>first_author<\/th>\n      <th>condition<\/th>\n      <th>file<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"","pageLength":20,"autoWidth":true,"columnDefs":[{"width":"200px","targets":4},{"className":"dt-right","targets":2},{"orderable":false,"targets":0}],"order":[],"orderClasses":false,"lengthMenu":[10,20,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="datasets-per-author-2" class="section level3 tabset">
+<h3 class="tabset">Datasets per author</h3>
+<p>This part is customized depending on the originally published files.
+Since those files are formatted each in their own way, this part is
+partly manual and should be modified carefully.</p>
+<div id="conway-et-al.-2014-2" class="section level4">
+<h4>Conway et al., 2014</h4>
+<p>Reference article: <a
+href="https://doi.org/10.1128/mbio.01442-14">Conway et al., 2014</a></p>
+<p>Conditions:</p>
+<ul>
+<li>Exponential phase</li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li>Genome coordinates were converted from version U00096.2 to version
+U00096.3 using the library <a
+href="https://github.com/rioualen/EcoliGenes">EcoliGenes</a></li>
+</ul>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>TR0003 <span class="ot">&lt;-</span> <span class="fu">read_excel_cm</span>(ht_tts_dataset_list<span class="sc">$</span>TR0003<span class="sc">$</span>filepath, <span class="at">sheet =</span> <span class="dv">1</span>, <span class="at">comment.char =</span> <span class="st">&quot;#&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">term_pos =</span> <span class="fu">gsub</span>(<span class="st">&quot;^[T]{1,2}-&quot;</span>, <span class="st">&quot;&quot;</span>, Term), <span class="at">strand =</span> Strand) <span class="sc">%&gt;%</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(strand, term_pos) <span class="sc">%&gt;%</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">distinct</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">term_pos =</span> EcoliGenes<span class="sc">::</span><span class="fu">convert_coords</span>(term_pos)) <span class="sc">%&gt;%</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">start =</span> term_pos, <span class="at">stop =</span> term_pos) <span class="sc">%&gt;%</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(start, stop, strand, term_pos) </span></code></pre></div>
+</div>
+<div id="ju-et-al-2019" class="section level4">
+<h4>Ju et al, 2019</h4>
+<p>Reference article: <a
+href="https://doi.org/10.1038/s41564-019-0500-z">Ju et al., 2019</a></p>
+<p>Conditions:</p>
+<ul>
+<li>exponential phase</li>
+<li>stationary phase</li>
+</ul>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>TR0001 <span class="ot">&lt;-</span> <span class="fu">read_excel_cm</span>(ht_tts_dataset_list<span class="sc">$</span>TR0001<span class="sc">$</span>filepath, <span class="at">sheet =</span> <span class="dv">1</span>, <span class="at">comment.char =</span> <span class="st">&quot;#&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">term_pos =</span> TTS_position,</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">strand =</span> TTS_strand) <span class="sc">%&gt;%</span> </span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">start =</span> term_pos, </span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">stop =</span> term_pos) <span class="sc">%&gt;%</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(start, stop, strand, term_pos) <span class="sc">%&gt;%</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">distinct</span>()</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>TR0002 <span class="ot">&lt;-</span> <span class="fu">read_excel_cm</span>(ht_tts_dataset_list<span class="sc">$</span>TR0002<span class="sc">$</span>filepath, <span class="at">sheet =</span> <span class="dv">1</span>, <span class="at">comment.char =</span> <span class="st">&quot;#&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">term_pos =</span> TTS_position,</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>                <span class="at">strand =</span> TTS_strand) <span class="sc">%&gt;%</span> </span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">start =</span> term_pos, </span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>                <span class="at">stop =</span> term_pos) <span class="sc">%&gt;%</span></span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(start, stop, strand, term_pos) <span class="sc">%&gt;%</span></span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">distinct</span>()</span></code></pre></div>
+</div>
+<div id="yan-et-al.-2018-2" class="section level4">
+<h4>Yan et al., 2018</h4>
+<p>Reference article: <a href="10.1038/s41467-018-05997-6">Yan et al.,
+2018</a></p>
+<p>Conditions:</p>
+<ul>
+<li>M9 (minimal growth medium)</li>
+<li>Rich (rich growth medium)</li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li>Two types of TU termination are reported for each condition:
+detected TTS or longest read end. The latter was not included.</li>
+</ul>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>TR0004 <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(ht_tts_dataset_list<span class="sc">$</span>TR0004<span class="sc">$</span>filepath, <span class="at">skip =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">strand =</span> TU_strand, </span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">term_pos =</span> <span class="fu">ifelse</span>(strand <span class="sc">==</span> <span class="st">&quot;-&quot;</span>, TU_left_position, TU_right_position),</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">start =</span> term_pos,</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">stop =</span> term_pos) <span class="sc">%&gt;%</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(start, stop, strand, term_pos) <span class="sc">%&gt;%</span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">distinct</span>()</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>TR0005 <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(ht_tts_dataset_list<span class="sc">$</span>TR0005<span class="sc">$</span>filepath, <span class="at">skip =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">strand =</span> TU_strand, </span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>                <span class="at">term_pos =</span> <span class="fu">ifelse</span>(strand <span class="sc">==</span> <span class="st">&quot;-&quot;</span>, TU_left_position, TU_right_position),</span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>                <span class="at">start =</span> term_pos,</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>                <span class="at">stop =</span> term_pos) <span class="sc">%&gt;%</span></span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(start, stop, strand, term_pos) <span class="sc">%&gt;%</span></span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">distinct</span>()</span></code></pre></div>
+</div>
+</div>
+<div id="uniformization-2" class="section level3">
+<h3>Uniformization</h3>
+<p>This part assumes that the specificities of each individual dataset
+were dealt with previously. It generates unique IDs for terminators and
+writes one file per dataset.</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>tts_datasets_list <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(ds_id <span class="cf">in</span> <span class="fu">names</span>(ht_term_dataset_list)) {</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">&lt;-</span> <span class="fu">get</span>(ds_id) <span class="sc">%&gt;%</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">id =</span> <span class="fu">paste0</span>(<span class="st">&quot;TTS_&quot;</span>, ds_id, <span class="st">&quot;_&quot;</span>, dplyr<span class="sc">::</span><span class="fu">row_number</span>()),</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">start =</span> term_pos,</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>                  <span class="at">stop =</span> term_pos,</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>                  <span class="at">chromosome =</span> <span class="st">&quot;NC_000913.3&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">arrange</span>(start)</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write.table</span>(df <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(chromosome, start, stop, id, term_pos, strand), <span class="at">file =</span> <span class="fu">paste0</span>(ht_tts_dir, <span class="st">&quot;/uniform_files/&quot;</span>, ds_id, <span class="st">&quot;.tsv&quot;</span>), <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">quote =</span> F, <span class="at">col.names =</span> T, <span class="at">row.names =</span> F)</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assign</span>(ds_id, df)</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>  tts_datasets_list[[ds_id]] <span class="ot">&lt;-</span> df</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<ul>
+<li>Write a summary file for TTS datasets</li>
+</ul>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>ht_tts_stats <span class="ot">&lt;-</span> ht_tts_metadata <span class="sc">%&gt;%</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rowwise</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">tts_number =</span> <span class="fu">nrow</span>(<span class="fu">get</span>(dataset_id))) <span class="sc">%&gt;%</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(dataset_id, pmid, author, condition, tts_number)</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(ht_tts_stats, <span class="at">file =</span> <span class="fu">paste0</span>(ht_tts_dir, <span class="st">&quot;/TTS_datasets.tsv&quot;</span>), <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">quote =</span> F, <span class="at">col.names =</span> T, <span class="at">row.names =</span> F)</span></code></pre></div>
+</div>
+<div id="results-2" class="section level3">
+<h3>Results</h3>
+<p>Summary of datasets:</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>DT6 <span class="ot">&lt;-</span> DT<span class="sc">::</span><span class="fu">datatable</span>(ht_tts_stats) <span class="co">#, options = list(dom = &#39;&#39;, pageLength = 20)) %&gt;% DT::formatRound(&#39;tts_number&#39;, digits=0)</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>DT6</span></code></pre></div>
+<p>Distribution</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>ht_tts_stats_legends <span class="ot">&lt;-</span> ht_tts_stats  <span class="sc">%&gt;%</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">first_author =</span> <span class="fu">str_split</span>(author, <span class="st">&quot;,&quot;</span>)[[<span class="dv">1</span>]][<span class="dv">1</span>])</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a> <span class="fu">ggplot</span>(ht_tts_stats_legends, <span class="fu">aes</span>(<span class="at">x =</span> dataset_id, <span class="at">y =</span> tts_number, <span class="at">fill =</span> first_author)) <span class="sc">+</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust=</span><span class="dv">1</span>), <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>)) <span class="sc">+</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;Number of TSSs&quot;</span>) <span class="sc">+</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;Dataset ID&quot;</span>) <span class="sc">+</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Number of TTSs per dataset&quot;</span>) <span class="sc">+</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>  ggsci<span class="sc">::</span><span class="fu">scale_fill_jco</span>()</span></code></pre></div>
+<p><img src="HT_collections_report_files/figure-html/fig-stats-tts-1-1.png" width="1152" style="display: block; margin: auto;" /></p>
+</div>
+<div id="comparison-with-classic-data-1" class="section level3">
+<h3>Comparison with classic data</h3>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save.image</span>(<span class="at">file =</span> <span class="fu">paste0</span>(<span class="st">&quot;HT_collections.Rdata&quot;</span>))</span></code></pre></div>
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4,h5",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
